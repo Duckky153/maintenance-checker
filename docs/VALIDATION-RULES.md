@@ -18,3 +18,22 @@ as problems. Overlap checks require the same site, not merely the same broad
 region. Normalization only standardizes spacing, capitalization, and zero-padded
 site numbers. The original title, description, schedule text, and source URL
 remain in the generated report.
+
+## Calendar readiness gate
+
+An active or upcoming maintenance record is held out of the calendar when it
+has a high-severity finding, lacks a complete parseable window, has an invalid
+window, or has no location. Held records remain visible with their source link
+and exact reason. An extension that states only a date remains a date-only fact;
+the checker does not invent an end time.
+
+## Source contract
+
+A refresh must pass all of these checks before the captured files are promoted:
+
+- both expected public URLs return successfully;
+- the page and RSS bodies contain the expected document and CoreWeave markers;
+- the manifest URL, byte count, filename, and SHA-256 hash match each body;
+- at least one recognizable event is parsed;
+- every parsed event has an identifier, title, and approved public source host;
+- a source cannot contain conflicting records under the same identifier.

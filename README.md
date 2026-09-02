@@ -2,7 +2,7 @@
 
 This project reads CoreWeave's public status page and RSS feed, checks each
 maintenance notice for inconsistent locations, dates, times, extensions, missing
-details, and overlapping windows, then produces a clean calendar and a
+details, and overlapping windows, then produces a review-gated calendar and a
 downloadable maintenance summary.
 
 The checked-in records are public source captures, not invented operating data.
@@ -33,7 +33,8 @@ Open `http://127.0.0.1:4180`.
 
 1. Open **Notices** to see the source records and update history.
 2. Open **Problems found** to compare conflicting source fields.
-3. Open **Calendar** to see maintenance grouped by date and location.
+3. Open **Calendar** to see which records passed the readiness checks and which
+   records were held for review.
 4. Open **Summary** to download the next-maintenance brief.
 
 ## Evidence boundary
@@ -41,5 +42,8 @@ Open `http://127.0.0.1:4180`.
 - Source: `https://status.coreweave.com/`
 - Feed: `https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss`
 - Product data: public incidents and maintenance notices only
-- Tests: captured real source records plus a live-source availability check
+- Tests: captured real source records, rejection tests derived from those
+  captures, live source-contract checks, and browser verification
 - Claims: parser, validation, calendar, summary, tests, and documentation
+- Not claimed: internal access, employee research, deployment, adoption, time
+  saved, errors prevented, or operational impact

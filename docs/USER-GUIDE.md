@@ -5,8 +5,14 @@
 3. Run `npm run serve`, then open `http://127.0.0.1:4180`.
 4. Review **Problems found** first. Each item shows the source fields side by side.
 5. Confirm the original notice before carrying a flagged value forward.
-6. Review **Calendar** for active and upcoming maintenance.
-7. Download **Summary** for the handoff.
+6. Review **Calendar** for records that passed the readiness gate. Records with
+   blocking conflicts remain under **Held for review** and are not carried into
+   the calendar.
+7. Download **Summary** for the handoff. It preserves the same separation
+   between calendar-ready and held records.
 
 The **Refresh from source** button performs the first two steps while the local
-server is running. It does not write to an external system.
+server is running. It does not write to an external system. The refresh first
+captures into a temporary location and validates the source structure, hashes,
+and parsed records. A failed refresh does not replace the last verified product
+output.

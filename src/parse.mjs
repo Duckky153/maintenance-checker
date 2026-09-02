@@ -200,7 +200,7 @@ export function mergeEvents(pageEvents, rssEvents) {
       ...event,
       titleLocation: event.titleLocation ? canonicalLocation(event.titleLocation) : null,
       fieldLocation: event.fieldLocation ? canonicalLocation(event.fieldLocation) : null,
-      extendedTo: extractExtendedDate(extensionText),
+      extendedThroughDate: extractExtendedDate(extensionText),
     };
   });
 }

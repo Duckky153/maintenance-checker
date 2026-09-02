@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { STATUS_PAGE_URL, STATUS_RSS_URL } from "../src/constants.mjs";
 import { buildReport } from "../src/pipeline.mjs";
+import { validateSourceDocuments } from "../src/source-contract.mjs";
+import { sha256 } from "../src/utils.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const evidenceDir = path.join(rootDir, "evidence");
@@ -25,15 +27,24 @@ function requireCondition(condition, message) {
 }
 
 async function liveSourceChecks() {
-  const results = [];
-  for (const url of [STATUS_PAGE_URL, STATUS_RSS_URL]) {
+  const results = await Promise.all([STATUS_PAGE_URL, STATUS_RSS_URL].map(async (url) => {
     const response = await fetch(url, {
       headers: { "user-agent": "MaintenanceNoticeChecker/1.0 verification" },
       signal: AbortSignal.timeout(15000),
     });
     requireCondition(response.ok, `Live source returned ${response.status}: ${url}`);
-    results.push({ url, httpStatus: response.status, checkedAt: new Date().toISOString() });
-  }
+    const body = await response.text();
+    return {
+      url,
+      httpStatus: response.status,
+      checkedAt: new Date().toISOString(),
+      bytes: Buffer.byteLength(body),
+      sha256: sha256(body),
+      body,
+    };
+  }));
+  validateSourceDocuments({ html: results[0].body, xml: results[1].body });
+  for (const result of results) delete result.body;
   return results;
 }
 
@@ -85,11 +96,19 @@ async function browserChecks(report) {
       await page.getByRole("link", { name: /Calendar/ }).click();
       await page.getByRole("heading", { name: "Calendar" }).waitFor();
       requireCondition(await page.locator(".calendar-entry").count() === report.calendar.length, "Calendar count does not match report.");
+      requireCondition(await page.locator(".held-entry").count() === report.heldFromCalendar.length, "Held-for-review count does not match report.");
+      await page.screenshot({ path: path.join(browserDir, "desktop-calendar.png"), fullPage: true });
 
       await page.getByRole("link", { name: "Summary" }).click();
       await page.getByRole("heading", { name: "Summary" }).waitFor();
       requireCondition(await page.locator(".summary-text").textContent().then((text) => text.includes("# Maintenance summary")), "Summary content did not load.");
       requireCondition((await page.getByRole("link", { name: "Download summary" }).getAttribute("download")) === "maintenance-summary.md", "Summary download is not configured.");
+      const downloadPromise = page.waitForEvent("download");
+      await page.getByRole("link", { name: "Download summary" }).click();
+      const download = await downloadPromise;
+      requireCondition(download.suggestedFilename() === "maintenance-summary.md", "Summary download filename is wrong.");
+      const downloadedSummary = await readFile(await download.path(), "utf8");
+      requireCondition(downloadedSummary === await page.locator(".summary-text").textContent(), "Downloaded summary does not match the displayed summary.");
 
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(`${baseUrl}/#problems`, { waitUntil: "networkidle" });
@@ -107,6 +126,15 @@ async function browserChecks(report) {
         const button = document.querySelector("#refresh-button");
         return button && !button.disabled && button.textContent === "Refresh from source";
       });
+      const refreshedReport = await fetch(`${baseUrl}/data.json`).then((response) => response.json());
+      requireCondition(
+        Number(await page.locator("#notice-count").textContent()) === refreshedReport.counts.notices,
+        "Displayed notice count does not match the refreshed report.",
+      );
+      requireCondition(
+        (await page.locator("#capture-time").textContent()).startsWith("Captured "),
+        "Refresh did not replace the capture timestamp.",
+      );
       requireCondition(consoleErrors.length === 0, `Browser console errors: ${consoleErrors.join(" | ")}`);
 
       return {
@@ -114,7 +142,9 @@ async function browserChecks(report) {
         noticeRows: report.counts.notices,
         findingRows: report.counts.findings,
         calendarRows: report.calendar.length,
+        heldCalendarRows: report.heldFromCalendar.length,
         noticeReview: "passed",
+        summaryDownload: "passed",
         sourceRefreshHttpStatus: refreshResponse.status(),
         mobileOverflowPixels: overflow,
         consoleErrors,
@@ -122,6 +152,7 @@ async function browserChecks(report) {
           "evidence/browser/desktop-notices.png",
           "evidence/browser/desktop-notice-review.png",
           "evidence/browser/desktop-problems.png",
+          "evidence/browser/desktop-calendar.png",
           "evidence/browser/mobile-problems.png",
         ],
       };
@@ -136,8 +167,15 @@ async function browserChecks(report) {
 await mkdir(browserDir, { recursive: true });
 const report = await buildReport({ rootDir });
 
-const testResult = spawnSync(process.execPath, ["--test"], { cwd: rootDir, stdio: "inherit" });
+const testResult = spawnSync(process.execPath, ["--test", "--test-reporter=tap"], {
+  cwd: rootDir,
+  encoding: "utf8",
+});
+process.stdout.write(testResult.stdout || "");
+process.stderr.write(testResult.stderr || "");
 requireCondition(testResult.status === 0, "Automated tests failed.");
+const automatedTests = Number.parseInt(testResult.stdout.match(/# tests (\d+)/)?.[1] || "0", 10);
+requireCondition(automatedTests > 0, "Automated test count could not be verified.");
 
 const [liveSources, browserResult] = await Promise.all([
   liveSourceChecks(),
@@ -152,12 +190,13 @@ const verification = {
   result: "pass",
   dataBoundary: "Public CoreWeave status records only",
   syntheticProductRecords: 0,
-  syntheticTestRecords: 0,
+  inventedOperatingRecordsAcceptedByTests: 0,
   counts: finalReport.counts,
   calendarEntries: finalReport.calendar.length,
+  heldFromCalendar: finalReport.heldFromCalendar.length,
   sourceManifest: manifest,
   liveSources,
-  automatedTests: 8,
+  automatedTests,
   browser: browserResult,
 };
 
@@ -169,12 +208,13 @@ const markdown = [
   `- Notices: ${finalReport.counts.notices}`,
   `- Review items: ${finalReport.counts.findings}`,
   `- Calendar entries: ${finalReport.calendar.length}`,
-  `- Automated tests: 8 passed`,
+  `- Held from calendar: ${finalReport.heldFromCalendar.length}`,
+  `- Automated tests: ${automatedTests} passed`,
   `- Browser views: 4 passed`,
   `- Mobile horizontal overflow: ${browserResult.mobileOverflowPixels}px`,
   `- Browser console errors: ${browserResult.consoleErrors.length}`,
   `- Synthetic product records: 0`,
-  `- Synthetic test records: 0`,
+  `- Invented operating records accepted by tests: 0`,
   "",
   "## Captured sources",
   "",
@@ -189,4 +229,4 @@ await Promise.all([
   writeFile(path.join(evidenceDir, "verification.md"), markdown, "utf8"),
 ]);
 
-console.log(`PASS: 8 tests, 4 browser views, ${finalReport.counts.notices} real notices, 0 synthetic records.`);
+console.log(`PASS: ${automatedTests} tests, 4 browser views, ${finalReport.counts.notices} real notices, 0 synthetic product records.`);

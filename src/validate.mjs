@@ -51,14 +51,14 @@ export function validateEvents(events, now = new Date()) {
         ));
       }
 
-      if (event.extendedTo && event.endAt && dateOnly(event.extendedTo) > dateOnly(event.endAt)) {
+      if (event.extendedThroughDate && event.endAt && event.extendedThroughDate > dateOnly(event.endAt)) {
         findings.push(finding(
           "extension-not-in-schedule",
           "high",
           "Extension is not reflected in the schedule field",
           [event.id],
-          `An update extends the work through ${dateOnly(event.extendedTo)}, but the schedule field ends ${dateOnly(event.endAt)}.`,
-          { extendedTo: event.extendedTo, scheduleEnd: event.endAt },
+          `An update extends the work through ${event.extendedThroughDate}, but the schedule field ends ${dateOnly(event.endAt)}.`,
+          { extendedThroughDate: event.extendedThroughDate, scheduleEnd: event.endAt },
         ));
       }
 
@@ -73,7 +73,7 @@ export function validateEvents(events, now = new Date()) {
         ));
       }
 
-      if (event.phase === "active" && event.endAt && new Date(event.endAt) < now && !event.extendedTo) {
+      if (event.phase === "active" && event.endAt && new Date(event.endAt) < now && !event.extendedThroughDate) {
         findings.push(finding(
           "active-after-end",
           "medium",
