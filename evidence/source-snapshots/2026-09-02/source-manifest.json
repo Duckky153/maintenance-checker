@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-09-02T17:58:58.150Z",
+  "sources": [
+    {
+      "key": "statusPage",
+      "url": "https://status.coreweave.com/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-02T17:58:58.150Z",
+      "bytes": 178954,
+      "sha256": "13a928eed50ce9fb37cd71720e64ab5fa13b222cbc68605d1e695aa216d9a39e",
+      "file": "data/raw/status-page.html"
+    },
+    {
+      "key": "rss",
+      "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
+      "httpStatus": 200,
+      "retrievedAt": "2026-09-02T17:58:58.150Z",
+      "bytes": 17526,
+      "sha256": "80a5330743af3f3b8152662bb6e39e215d5607e9b3e48a596766c4d0250e6823",
+      "file": "data/raw/status-feed.xml"
+    }
+  ]
+}

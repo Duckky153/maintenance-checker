@@ -1,0 +1,75 @@
+{
+  "verifiedAt": "2026-09-02T18:14:53.495Z",
+  "result": "pass",
+  "dataBoundary": "Public CoreWeave status records only",
+  "syntheticProductRecords": 0,
+  "syntheticTestRecords": 0,
+  "counts": {
+    "notices": 15,
+    "maintenance": 12,
+    "incidents": 3,
+    "active": 4,
+    "upcoming": 5,
+    "findings": 4,
+    "highFindings": 2
+  },
+  "calendarEntries": 8,
+  "sourceManifest": {
+    "schemaVersion": 1,
+    "retrievedAt": "2026-09-02T18:14:53.315Z",
+    "sources": [
+      {
+        "key": "statusPage",
+        "url": "https://status.coreweave.com/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-02T18:14:53.315Z",
+        "bytes": 178954,
+        "sha256": "13a928eed50ce9fb37cd71720e64ab5fa13b222cbc68605d1e695aa216d9a39e",
+        "file": "data/raw/status-page.html"
+      },
+      {
+        "key": "rss",
+        "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-02T18:14:53.315Z",
+        "bytes": 17526,
+        "sha256": "80a5330743af3f3b8152662bb6e39e215d5607e9b3e48a596766c4d0250e6823",
+        "file": "data/raw/status-feed.xml"
+      }
+    ]
+  },
+  "liveSources": [
+    {
+      "url": "https://status.coreweave.com/",
+      "httpStatus": 200,
+      "checkedAt": "2026-09-02T18:14:52.321Z"
+    },
+    {
+      "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
+      "httpStatus": 200,
+      "checkedAt": "2026-09-02T18:14:52.366Z"
+    }
+  ],
+  "automatedTests": 8,
+  "browser": {
+    "views": [
+      "notices",
+      "problems",
+      "calendar",
+      "summary"
+    ],
+    "noticeRows": 15,
+    "findingRows": 4,
+    "calendarRows": 8,
+    "noticeReview": "passed",
+    "sourceRefreshHttpStatus": 200,
+    "mobileOverflowPixels": 0,
+    "consoleErrors": [],
+    "screenshots": [
+      "evidence/browser/desktop-notices.png",
+      "evidence/browser/desktop-notice-review.png",
+      "evidence/browser/desktop-problems.png",
+      "evidence/browser/mobile-problems.png"
+    ]
+  }
+}

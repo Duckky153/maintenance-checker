@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Maintenance Notice Checker</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div>
+        <h1>Maintenance Notice Checker</h1>
+      </div>
+      <div class="source-status" aria-live="polite">
+        <span id="capture-time">Loading source records…</span>
+        <button id="refresh-button" type="button">Refresh from source</button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Project views">
+      <a href="#notices" data-route="notices">Notices <span id="notice-count"></span></a>
+      <a href="#problems" data-route="problems">Problems found <span id="finding-count"></span></a>
+      <a href="#calendar" data-route="calendar">Calendar <span id="calendar-count"></span></a>
+      <a href="#summary" data-route="summary">Summary</a>
+    </nav>
+
+    <main id="app" tabindex="-1">
+      <p class="loading">Reading the captured status records…</p>
+    </main>
+
+    <dialog id="notice-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-header">
+        <h2 id="dialog-title">Notice review</h2>
+        <button id="close-dialog" type="button">Close</button>
+      </div>
+      <div id="dialog-content"></div>
+    </dialog>
+
+    <footer>
+      <a href="https://status.coreweave.com/" target="_blank" rel="noreferrer">CoreWeave status source</a>
+    </footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
