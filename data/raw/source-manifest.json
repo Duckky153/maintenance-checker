@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "retrievedAt": "2026-09-02T18:14:53.315Z",
+  "retrievedAt": "2026-09-02T18:36:21.915Z",
   "sources": [
     {
       "key": "statusPage",
       "url": "https://status.coreweave.com/",
       "httpStatus": 200,
-      "retrievedAt": "2026-09-02T18:14:53.315Z",
+      "retrievedAt": "2026-09-02T18:36:21.915Z",
       "bytes": 178954,
       "sha256": "13a928eed50ce9fb37cd71720e64ab5fa13b222cbc68605d1e695aa216d9a39e",
       "file": "data/raw/status-page.html"
@@ -15,9 +15,9 @@
       "key": "rss",
       "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
       "httpStatus": 200,
-      "retrievedAt": "2026-09-02T18:14:53.315Z",
+      "retrievedAt": "2026-09-02T18:36:21.915Z",
       "bytes": 17526,
-      "sha256": "80a5330743af3f3b8152662bb6e39e215d5607e9b3e48a596766c4d0250e6823",
+      "sha256": "be59f53668b6c90dbb7c305cc31e28cf1307f72979168f657f4ba5c20f2b55f5",
       "file": "data/raw/status-feed.xml"
     }
   ]
