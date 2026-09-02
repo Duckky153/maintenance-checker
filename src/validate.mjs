@@ -1,4 +1,4 @@
-import { canonicalLocation, locationRegion } from "./utils.mjs";
+import { baseLocationCode, canonicalLocation } from "./utils.mjs";
 
 function finding(rule, severity, title, eventIds, detail, evidence) {
   return { id: `${rule}:${eventIds.join(":")}`, rule, severity, title, eventIds, detail, evidence };
@@ -9,7 +9,7 @@ function compareLocations(event) {
   const title = canonicalLocation(event.titleLocation);
   const field = canonicalLocation(event.fieldLocation);
   if (title === field) return null;
-  if (locationRegion(title) !== locationRegion(field)) {
+  if (baseLocationCode(title) !== baseLocationCode(field)) {
     return finding(
       "location-conflict",
       "high",
@@ -18,6 +18,37 @@ function compareLocations(event) {
       `The title names ${title}, while the structured location field names ${field}.`,
       { titleLocation: title, fieldLocation: field },
     );
+  }
+  return null;
+}
+
+function twelveHourMinutes(hourText, minuteText, meridiemText) {
+  const hour12 = Number.parseInt(hourText, 10);
+  const minute = Number.parseInt(minuteText, 10);
+  if (hour12 < 1 || hour12 > 12 || minute < 0 || minute > 59) return null;
+  return (hour12 % 12) * 60 + minute + (meridiemText.toUpperCase() === "PM" ? 12 * 60 : 0);
+}
+
+function findLocalUtcConflict(event) {
+  const text = event.description || "";
+  const pattern = /(\d{1,2}):(\d{2})\s*(AM|PM)\s*ET\s*\(\s*(\d{1,2}):(\d{2})\s*(AM|PM)\s*UTC\s*\)/gi;
+  for (const match of text.matchAll(pattern)) {
+    const localMinutes = twelveHourMinutes(match[1], match[2], match[3]);
+    const utcMinutes = twelveHourMinutes(match[4], match[5], match[6]);
+    if (localMinutes === null || utcMinutes === null) continue;
+    const offsetMinutes = (utcMinutes - localMinutes + 24 * 60) % (24 * 60);
+    if (![240, 300].includes(offsetMinutes)) {
+      const localTime = `${match[1]}:${match[2]} ${match[3].toUpperCase()} ET`;
+      const utcTime = `${match[4]}:${match[5]} ${match[6].toUpperCase()} UTC`;
+      return finding(
+        "local-utc-time-conflict",
+        "high",
+        "Local and UTC times conflict",
+        [event.id],
+        `${localTime} cannot correspond to ${utcTime}; Eastern Time is four or five hours behind UTC.`,
+        { localTime, utcTime, validOffsetsHours: [4, 5] },
+      );
+    }
   }
   return null;
 }
@@ -34,6 +65,9 @@ export function validateEvents(events, now = new Date()) {
     if (locationFinding) findings.push(locationFinding);
 
     if (event.kind === "maintenance") {
+      const timeFinding = findLocalUtcConflict(event);
+      if (timeFinding) findings.push(timeFinding);
+
       const missing = [
         ["schedule", event.scheduleText],
         ["component", event.component],
@@ -44,7 +78,7 @@ export function validateEvents(events, now = new Date()) {
         findings.push(finding(
           "missing-fields",
           "medium",
-          "Required fields missing",
+          "Handoff fields missing",
           [event.id],
           `Missing ${missing.join(", ")}.`,
           { missing },
@@ -73,7 +107,8 @@ export function validateEvents(events, now = new Date()) {
         ));
       }
 
-      if (event.phase === "active" && event.endAt && new Date(event.endAt) < now && !event.extendedThroughDate) {
+      const extensionStillCurrent = event.extendedThroughDate && event.extendedThroughDate >= dateOnly(now.toISOString());
+      if (event.phase === "active" && event.endAt && new Date(event.endAt) < now && !extensionStillCurrent) {
         findings.push(finding(
           "active-after-end",
           "medium",
@@ -112,18 +147,18 @@ export function validateEvents(events, now = new Date()) {
       const left = scheduled[leftIndex];
       const right = scheduled[rightIndex];
       if (left.id === right.id) continue;
-      const site = (event) => canonicalLocation(event.fieldLocation || event.titleLocation || "").replace(/(\d)[A-Z]$/, "$1");
-      const leftRegion = site(left);
-      const rightRegion = site(right);
+      const site = (event) => baseLocationCode(event.fieldLocation || event.titleLocation || "");
+      const leftLocation = site(left);
+      const rightLocation = site(right);
       const overlap = left.startAt < right.endAt && right.startAt < left.endAt;
-      if (leftRegion && leftRegion === rightRegion && overlap) {
+      if (leftLocation && leftLocation === rightLocation && overlap) {
         findings.push(finding(
           "overlapping-windows",
           "medium",
-          "Maintenance windows overlap at the same site",
+          "Maintenance windows share a location and time",
           [left.id, right.id],
           `${left.title} overlaps ${right.title}.`,
-          { region: leftRegion, left: [left.startAt, left.endAt], right: [right.startAt, right.endAt] },
+          { locationCode: leftLocation, left: [left.startAt, left.endAt], right: [right.startAt, right.endAt] },
         ));
       }
     }

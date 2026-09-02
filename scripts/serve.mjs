@@ -9,6 +9,7 @@ const defaultRootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url))
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
+  ".ics": "text/calendar; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".md": "text/markdown; charset=utf-8",
@@ -35,7 +36,25 @@ export function createMaintenanceServer({
   return http.createServer(async (request, response) => {
     const url = new URL(request.url || "/", `http://${host}:${port}`);
     if (request.method === "GET" && url.pathname === "/health") {
-      respond(response, 200, "ok");
+      try {
+        const report = JSON.parse(await readFile(path.join(siteDir, "data.json"), "utf8"));
+        respond(response, 200, JSON.stringify({
+          status: "ok",
+          schemaVersion: report.schemaVersion,
+          generatedAt: report.generatedAt,
+          counts: report.counts,
+        }), contentTypes[".json"]);
+      } catch {
+        respond(response, 503, JSON.stringify({ status: "unavailable" }), contentTypes[".json"]);
+      }
+      return;
+    }
+    if (request.method === "GET" && url.pathname === "/api/report") {
+      try {
+        respond(response, 200, await readFile(path.join(siteDir, "data.json")), contentTypes[".json"]);
+      } catch {
+        respond(response, 503, JSON.stringify({ error: "No generated report is available." }), contentTypes[".json"]);
+      }
       return;
     }
     if (request.method === "POST" && url.pathname === "/api/refresh") {
@@ -59,7 +78,13 @@ export function createMaintenanceServer({
       return;
     }
 
-    const relativePath = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
+    let relativePath;
+    try {
+      relativePath = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
+    } catch {
+      respond(response, 400, "Malformed URL");
+      return;
+    }
     const resolved = path.resolve(siteDir, relativePath);
     if (resolved !== siteDir && !resolved.startsWith(`${siteDir}${path.sep}`)) {
       respond(response, 403, "Forbidden");

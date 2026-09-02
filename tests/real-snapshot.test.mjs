@@ -1,20 +1,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_FILES, STATUS_PAGE_URL, STATUS_RSS_URL } from "../src/constants.mjs";
 import { captureSources } from "../src/capture.mjs";
 import { mergeEvents, parseRss, parseStatusPage } from "../src/parse.mjs";
-import { createMaintenanceSummary, createReport } from "../src/report.mjs";
-import { refreshProject } from "../src/refresh.mjs";
+import { createCalendarIcs, createMaintenanceSummary, createReport } from "../src/report.mjs";
+import { promoteArtifacts, refreshProject } from "../src/refresh.mjs";
 import {
   validateParsedEvents,
   validateSourceDocuments,
   validateSourceManifest,
 } from "../src/source-contract.mjs";
-import { sha256 } from "../src/utils.mjs";
+import { baseLocationCode, extractExtendedDate, parseUtcSchedule, sha256 } from "../src/utils.mjs";
 import { validateEvents } from "../src/validate.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -50,7 +50,7 @@ test("source contract accepts the archived documents and matching manifest", asy
   assert.doesNotThrow(() => validateSourceManifest({ manifest, html, xml }));
 });
 
-test("source contract rejects a branded error page and a tampered capture", async () => {
+test("source contract rejects a truncated page and a tampered capture", async () => {
   const { html, xml, manifest } = await loadSnapshot();
   assert.throws(
     () => validateSourceDocuments({ html: html.slice(0, 120), xml }),
@@ -69,6 +69,12 @@ test("source contract rejects an unrecognized zero-record parse", () => {
     () => validateParsedEvents({ pageEvents: [], rssEvents: [] }),
     /no recognizable notices/,
   );
+});
+
+test("source contract requires a successful parse from each source", async () => {
+  const { pageEvents, rssEvents } = await loadSnapshot();
+  assert.throws(() => validateParsedEvents({ pageEvents: [], rssEvents }), /status page/);
+  assert.throws(() => validateParsedEvents({ pageEvents, rssEvents: [] }), /RSS feed/);
 });
 
 test("failed two-source capture leaves the last verified raw files unchanged", async () => {
@@ -158,6 +164,31 @@ test("real abbreviated schedules become calendar-ready UTC windows", async () =>
   assert.equal(event.endAt, "2026-09-03T13:00:00.000Z");
 });
 
+test("date parsing rejects impossible dates and keeps the latest stated extension", () => {
+  assert.deepEqual(
+    parseUtcSchedule("February 31, 2026 11:00AM - 1:00PM UTC"),
+    { startAt: null, endAt: null },
+  );
+  assert.equal(
+    extractExtendedDate("Extended until September 3, 2026, then extended through September 5th, 2026"),
+    "2026-09-05",
+  );
+});
+
+test("location normalization preserves distinct base location codes", () => {
+  assert.equal(baseLocationCode("US-EAST-04A"), "US-EAST-04");
+  assert.equal(baseLocationCode("US-EAST-08A"), "US-EAST-08");
+  assert.notEqual(baseLocationCode("US-EAST-04A"), baseLocationCode("US-EAST-08A"));
+});
+
+test("validator rejects different numbered locations within one broad region", async () => {
+  const { events } = await loadSnapshot();
+  const sourceEvent = events.find((event) => event.id === "6a973dcfdf35e104e60306a3");
+  const rejectionInput = { ...sourceEvent, titleLocation: "US-EAST-08A", fieldLocation: "US-EAST-04" };
+  const findings = validateEvents([rejectionInput], new Date("2026-09-02T18:00:00Z"));
+  assert.ok(findings.some((finding) => finding.rule === "location-conflict"));
+});
+
 test("validator exposes the real cross-region location conflict", async () => {
   const { events } = await loadSnapshot();
   const findings = validateEvents(events, new Date("2026-09-02T18:00:00Z"));
@@ -177,6 +208,32 @@ test("validator retains the real incident status reversal", async () => {
   ]);
 });
 
+test("validator exposes the real local and UTC time conflict", async () => {
+  const { events } = await loadSnapshot();
+  const findings = validateEvents(events, new Date("2026-09-02T18:00:00Z"));
+  const conflict = findings.find((item) => item.rule === "local-utc-time-conflict");
+  assert.ok(conflict);
+  assert.equal(conflict.eventIds[0], "6a91de56495e3647627df156");
+  assert.deepEqual(conflict.evidence, {
+    localTime: "11:00 PM ET",
+    utcTime: "3:00 PM UTC",
+    validOffsetsHours: [4, 5],
+  });
+});
+
+test("merged records use the latest RSS lifecycle state", async () => {
+  const { events } = await loadSnapshot();
+  const active = events.find((event) => event.id === "6a85c13dcfac4447738b2ede");
+  assert.equal(active.status, "Active");
+});
+
+test("an expired date-only extension does not hide an active notice past its end", async () => {
+  const { events } = await loadSnapshot();
+  const extended = events.find((event) => event.id === "6a85c13dcfac4447738b2ede");
+  const findings = validateEvents([extended], new Date("2026-09-05T12:00:00Z"));
+  assert.ok(findings.some((finding) => finding.rule === "active-after-end"));
+});
+
 test("report and handoff summary preserve source-backed records", async () => {
   const { events, manifest } = await loadSnapshot();
   const findings = validateEvents(events, new Date("2026-09-02T18:00:00Z"));
@@ -188,14 +245,52 @@ test("report and handoff summary preserve source-backed records", async () => {
   });
   const summary = createMaintenanceSummary(report);
   assert.equal(report.counts.notices, events.length);
-  assert.equal(report.calendar.length, 6);
-  assert.equal(report.heldFromCalendar.length, 2);
+  const calendarFile = createCalendarIcs(report);
+  assert.equal(report.calendar.length, 5);
+  assert.equal(report.heldFromCalendar.length, 3);
   assert.ok(report.heldFromCalendar.some((event) => event.id === "6a973dcfdf35e104e60306a3"));
   assert.ok(report.heldFromCalendar.some((event) => event.id === "6a85c13dcfac4447738b2ede"));
+  assert.ok(report.heldFromCalendar.some((event) => event.id === "6a91de56495e3647627df156"));
   assert.ok(report.calendar.every((event) => !report.heldFromCalendar.some((held) => held.id === event.id)));
   assert.match(summary, /Active and upcoming maintenance/);
   assert.match(summary, /Held from calendar/);
   assert.match(summary, /https:\/\/status\.coreweave\.com\/pages\/maintenance\//);
+  assert.equal((calendarFile.match(/BEGIN:VEVENT/g) || []).length, report.calendar.length);
+  assert.doesNotMatch(calendarFile, /6a91de56495e3647627df156/);
+});
+
+test("artifact promotion rolls every target back when a later target is missing", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "maintenance-promotion-root-"));
+  const stage = await mkdtemp(path.join(os.tmpdir(), "maintenance-promotion-stage-"));
+  try {
+    await writeFile(path.join(root, "first.txt"), "old", "utf8");
+    await writeFile(path.join(stage, "first.txt"), "new", "utf8");
+    await assert.rejects(
+      promoteArtifacts({ rootDir: root, stageDir: stage, relativePaths: ["first.txt", "missing.txt"] }),
+      /ENOENT/,
+    );
+    assert.equal(await readFile(path.join(root, "first.txt"), "utf8"), "old");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(stage, { recursive: true, force: true });
+  }
+});
+
+test("successful refresh archives the validated source capture", async () => {
+  const { html, xml } = await loadSnapshot();
+  const tempRoot = await mkdtemp(path.join(os.tmpdir(), "maintenance-archive-test-"));
+  const now = new Date("2026-09-02T18:00:00.000Z");
+  const fetchImpl = async (url) => new Response(url === STATUS_PAGE_URL ? html : xml, { status: 200 });
+  try {
+    await mkdir(tempRoot, { recursive: true });
+    await refreshProject({ rootDir: tempRoot, fetchImpl, now });
+    const archives = await readdir(path.join(tempRoot, "evidence", "source-snapshots"));
+    assert.deepEqual(archives, ["2026-09-02T18-00-00-000Z"]);
+    const archivedManifest = await readFile(path.join(tempRoot, "evidence", "source-snapshots", archives[0], SOURCE_FILES.manifest), "utf8");
+    assert.match(archivedManifest, /2026-09-02T18:00:00.000Z/);
+  } finally {
+    await rm(tempRoot, { recursive: true, force: true });
+  }
 });
 
 test("generated product records contain no invented source domains or synthetic labels", async () => {

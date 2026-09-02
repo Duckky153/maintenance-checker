@@ -35,6 +35,7 @@ export function createReport({ events, findings, manifest, generatedAt }) {
       location: event.fieldLocation || event.titleLocation,
       component: event.component,
       status: event.status,
+      phase: event.phase,
       sourceUrl: event.sourceUrl,
     }))
     .sort((a, b) => a.startAt.localeCompare(b.startAt));
@@ -96,6 +97,7 @@ export function createMaintenanceSummary(report) {
         `- Location: ${item.location || "Not stated"}`,
         `- Component: ${item.component || "Not stated"}`,
         `- Status: ${item.status}`,
+        `- Page section: ${item.phase}`,
         `- Source: ${item.sourceUrl}`,
         "",
       );
@@ -125,9 +127,56 @@ export function createMaintenanceSummary(report) {
     lines.push("");
   }
 
-  lines.push(
-    "This summary uses public status notices. It does not contain private telemetry or internal operating instructions.",
-    "",
-  );
+  lines.push("Prepared from public CoreWeave status records.", "");
   return lines.join("\n");
+}
+
+function icsText(value = "") {
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/\r?\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+function icsDate(value) {
+  return new Date(value).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+}
+
+function foldIcsLine(line) {
+  const chunks = [];
+  let rest = line;
+  while (rest.length > 73) {
+    chunks.push(rest.slice(0, 73));
+    rest = ` ${rest.slice(73)}`;
+  }
+  chunks.push(rest);
+  return chunks.join("\r\n");
+}
+
+export function createCalendarIcs(report) {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Maintenance Notice Checker//Public Status Calendar//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "X-WR-CALNAME:CoreWeave public maintenance review",
+  ];
+  for (const item of report.calendar) {
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${icsText(item.id)}@maintenance-notice-checker.local`,
+      `DTSTAMP:${icsDate(report.generatedAt)}`,
+      `DTSTART:${icsDate(item.startAt)}`,
+      `DTEND:${icsDate(item.endAt)}`,
+      `SUMMARY:${icsText(item.title)}`,
+      `LOCATION:${icsText(item.location || "Not stated")}`,
+      `DESCRIPTION:${icsText(`${item.status} (${item.phase}). Source: ${item.sourceUrl}`)}`,
+      `URL:${icsText(item.sourceUrl)}`,
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  return `${lines.map(foldIcsLine).join("\r\n")}\r\n`;
 }

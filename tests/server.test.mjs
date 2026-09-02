@@ -1,5 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { createMaintenanceServer } from "../scripts/serve.mjs";
 
 function listen(server) {
@@ -55,6 +58,49 @@ test("refresh endpoint rejects concurrent refreshes with 409", async () => {
     assert.equal((await firstRequest).status, 200);
   } finally {
     releaseRefresh();
+    await close(server);
+  }
+});
+
+test("health and report endpoints expose the generated integration contract", async () => {
+  const rootDir = await mkdtemp(path.join(os.tmpdir(), "maintenance-server-test-"));
+  const generated = {
+    schemaVersion: 2,
+    generatedAt: "2026-09-02T18:00:00.000Z",
+    counts: { notices: 15, findings: 5, calendarReady: 4, calendarHeld: 3 },
+    events: [],
+  };
+  await mkdir(path.join(rootDir, "site"), { recursive: true });
+  await writeFile(path.join(rootDir, "site", "data.json"), JSON.stringify(generated), "utf8");
+  const server = createMaintenanceServer({ rootDir });
+  const baseUrl = await listen(server);
+  try {
+    const health = await fetch(`${baseUrl}/health`);
+    assert.equal(health.status, 200);
+    assert.deepEqual(await health.json(), {
+      status: "ok",
+      schemaVersion: 2,
+      generatedAt: generated.generatedAt,
+      counts: generated.counts,
+    });
+    const report = await fetch(`${baseUrl}/api/report`);
+    assert.equal(report.status, 200);
+    assert.deepEqual(await report.json(), generated);
+  } finally {
+    await close(server);
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
+test("malformed static URL returns 400 without stopping the server", async () => {
+  const server = createMaintenanceServer();
+  const baseUrl = await listen(server);
+  try {
+    const malformed = await fetch(`${baseUrl}/%`);
+    assert.equal(malformed.status, 400);
+    const health = await fetch(`${baseUrl}/health`);
+    assert.equal(health.status, 200);
+  } finally {
     await close(server);
   }
 });
