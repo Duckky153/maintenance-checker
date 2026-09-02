@@ -1,31 +1,32 @@
 {
-  "verifiedAt": "2026-09-02T19:14:09.907Z",
+  "verifiedAt": "2026-09-02T19:38:46.681Z",
   "result": "pass",
   "dataBoundary": "Public CoreWeave status records only",
-  "syntheticProductRecords": 0,
-  "inventedOperatingRecordsAcceptedByTests": 0,
+  "unexpectedSourceHosts": 0,
+  "recordsWithoutSourceId": 0,
+  "manifestHashMismatches": 0,
   "counts": {
     "notices": 15,
     "maintenance": 12,
     "incidents": 3,
     "active": 3,
     "upcoming": 5,
-    "findings": 4,
-    "highFindings": 2,
-    "calendarReady": 5,
-    "calendarHeld": 2
+    "findings": 5,
+    "highFindings": 3,
+    "calendarReady": 4,
+    "calendarHeld": 3
   },
-  "calendarEntries": 5,
-  "heldFromCalendar": 2,
+  "calendarEntries": 4,
+  "heldFromCalendar": 3,
   "sourceManifest": {
     "schemaVersion": 1,
-    "retrievedAt": "2026-09-02T19:14:09.722Z",
+    "retrievedAt": "2026-09-02T19:38:46.502Z",
     "sources": [
       {
         "key": "statusPage",
         "url": "https://status.coreweave.com/",
         "httpStatus": 200,
-        "retrievedAt": "2026-09-02T19:14:09.722Z",
+        "retrievedAt": "2026-09-02T19:38:46.502Z",
         "bytes": 170982,
         "sha256": "35d1afa05e2724e752a65b6f37813e93684890cec45021a61146739744905e33",
         "file": "data/raw/status-page.html"
@@ -34,9 +35,9 @@
         "key": "rss",
         "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
         "httpStatus": 200,
-        "retrievedAt": "2026-09-02T19:14:09.722Z",
+        "retrievedAt": "2026-09-02T19:38:46.502Z",
         "bytes": 17636,
-        "sha256": "a720dfb815bb5c39bef2bad66b6cd26c80bb37015cb199f317ddbe11fe30d593",
+        "sha256": "9fb3f622e996c412f495d33611a352e654f9e01c044af06f37c254151ef56c65",
         "file": "data/raw/status-feed.xml"
       }
     ]
@@ -45,19 +46,19 @@
     {
       "url": "https://status.coreweave.com/",
       "httpStatus": 200,
-      "checkedAt": "2026-09-02T19:14:08.336Z",
+      "checkedAt": "2026-09-02T19:38:44.986Z",
       "bytes": 170982,
       "sha256": "35d1afa05e2724e752a65b6f37813e93684890cec45021a61146739744905e33"
     },
     {
       "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
       "httpStatus": 200,
-      "checkedAt": "2026-09-02T19:14:08.333Z",
+      "checkedAt": "2026-09-02T19:38:44.981Z",
       "bytes": 17636,
-      "sha256": "a720dfb815bb5c39bef2bad66b6cd26c80bb37015cb199f317ddbe11fe30d593"
+      "sha256": "9fb3f622e996c412f495d33611a352e654f9e01c044af06f37c254151ef56c65"
     }
   ],
-  "automatedTests": 15,
+  "automatedTests": 26,
   "browser": {
     "views": [
       "notices",
@@ -66,11 +67,14 @@
       "summary"
     ],
     "noticeRows": 15,
-    "findingRows": 4,
-    "calendarRows": 5,
-    "heldCalendarRows": 2,
+    "findingRows": 5,
+    "calendarRows": 4,
+    "heldCalendarRows": 3,
     "noticeReview": "passed",
     "summaryDownload": "passed",
+    "calendarDownload": "passed",
+    "reportEndpoint": "passed",
+    "structuredHealth": "passed",
     "sourceRefreshHttpStatus": 200,
     "mobileOverflowPixels": 0,
     "consoleErrors": [],
@@ -79,7 +83,9 @@
       "evidence/browser/desktop-notice-review.png",
       "evidence/browser/desktop-problems.png",
       "evidence/browser/desktop-calendar.png",
-      "evidence/browser/mobile-problems.png"
+      "evidence/browser/mobile-notices.png",
+      "evidence/browser/mobile-problems.png",
+      "evidence/browser/mobile-summary.png"
     ]
   }
 }

@@ -52,8 +52,9 @@ function eventSignature(event) {
 }
 
 export function validateParsedEvents({ pageEvents, rssEvents }) {
+  requireSource(pageEvents.length > 0, "no recognizable notices were parsed from the status page");
+  requireSource(rssEvents.length > 0, "no recognizable notices were parsed from the RSS feed");
   const allEvents = [...pageEvents, ...rssEvents];
-  requireSource(allEvents.length > 0, "no recognizable notices were parsed from either source");
 
   for (const event of allEvents) {
     requireSource(Boolean(event.id), "a parsed notice has no identifier");

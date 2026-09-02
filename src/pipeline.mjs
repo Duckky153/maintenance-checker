@@ -4,7 +4,7 @@ import path from "node:path";
 import { SOURCE_FILES } from "./constants.mjs";
 import { parseRss, parseStatusPage, mergeEvents } from "./parse.mjs";
 import { validateEvents } from "./validate.mjs";
-import { createMaintenanceSummary, createReport } from "./report.mjs";
+import { createCalendarIcs, createMaintenanceSummary, createReport } from "./report.mjs";
 import {
   validateParsedEvents,
   validateSourceDocuments,
@@ -13,6 +13,7 @@ import {
 
 export async function writeReportOutputs({ rootDir, report }) {
   const summary = createMaintenanceSummary(report);
+  const calendar = createCalendarIcs(report);
   await mkdir(path.join(rootDir, "data", "generated"), { recursive: true });
   await mkdir(path.join(rootDir, "site"), { recursive: true });
   const writeAtomic = async (filePath, body) => {
@@ -27,8 +28,10 @@ export async function writeReportOutputs({ rootDir, report }) {
   await Promise.all([
     writeAtomic(path.join(rootDir, "data", "generated", "report.json"), `${JSON.stringify(report, null, 2)}\n`),
     writeAtomic(path.join(rootDir, "data", "generated", "maintenance-summary.md"), summary),
+    writeAtomic(path.join(rootDir, "data", "generated", "calendar.ics"), calendar),
     writeAtomic(path.join(rootDir, "site", "data.json"), `${JSON.stringify(report, null, 2)}\n`),
     writeAtomic(path.join(rootDir, "site", "maintenance-summary.md"), summary),
+    writeAtomic(path.join(rootDir, "site", "calendar.ics"), calendar),
   ]);
 }
 

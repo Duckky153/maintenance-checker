@@ -34,3 +34,18 @@ Changes made from that review:
 
 This log records actual repository changes. It does not represent user research,
 deployment, adoption, or operational impact.
+
+## September 2, 2026: release-readiness pass
+
+Five independent audits checked job-description fit, data validity, technical
+release behavior, interview defense, and user-interface clarity. The pass found
+and corrected an overly broad location comparison, an unflagged impossible
+ET/UTC time pair in a real notice, invalid-date rollover, stale extension logic,
+partial refresh promotion, parser failure masking, and a malformed-path server
+crash. It also added a read-only JSON report, structured health response,
+calendar-ready `.ics` export, archived refresh captures, mobile notice cards,
+plain review labels, and a readable summary preview.
+
+The result is a local portfolio prototype with a documented handoff boundary.
+It is not described as a production CoreWeave deployment or an existing
+connection to internal systems.

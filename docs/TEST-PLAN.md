@@ -4,13 +4,15 @@
 
 The automated tests use the archived September 2, 2026 capture of CoreWeave's
 real public status page and RSS feed. They verify provenance, parsing, event
-merging, date-only extension handling, field conflicts, lifecycle history,
-calendar quarantine, and summary links.
+merging, strict date parsing, date-only extension handling, local/UTC time
+checks, field conflicts, lifecycle history, calendar quarantine, `.ics` export,
+and summary links.
 
 Rejection tests truncate or tamper with copies of the real capture to confirm
 that the source contract catches unexpected content, hash mismatches, zero
-parsed records, failed two-source capture, validation failures, and concurrent
-refreshes. These invalid inputs are never accepted as product records.
+parsed records from either source, failed two-source capture, transaction
+rollback, validation failures, malformed HTTP paths, and concurrent refreshes.
+These invalid inputs are never accepted as product records.
 
 ## Live checks
 
@@ -24,11 +26,13 @@ hashes but does not expect the event count to remain fixed.
 - the displayed counts match the generated report;
 - a problem includes side-by-side source evidence;
 - calendar-ready and held-for-review counts match the report;
-- the downloaded summary bytes match the displayed summary;
+- the downloaded summary and calendar bytes match their generated files;
+- the health and JSON report endpoints return the generated schema and counts;
 - the refresh workflow completes;
-- desktop and mobile pages have no horizontal overflow outside tables;
+- desktop and mobile pages have no horizontal overflow;
+- all navigation and stacked notice cards remain visible on mobile;
 - no browser console error is recorded.
 
-No synthetic incident, maintenance, user, adoption, or business-outcome record
-is accepted into the product. The verification report records the exact current
-test count instead of relying on a hard-coded number.
+The verification report calculates source-host, source-identity, and manifest
+hash checks from the generated records and current captures. It records the
+exact test count instead of relying on a hard-coded number.

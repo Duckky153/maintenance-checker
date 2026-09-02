@@ -13,11 +13,11 @@ the live sources still match the expected structure.”
 
 1. Open **Notices** and show the source link, structured window, location, and
    status on one row.
-2. Open **Problems found** and explain one real field comparison. State that the
+2. Open **Needs review** and explain one real field comparison. State that the
    checker requests human review rather than declaring the source wrong.
 3. Open **Calendar** to show that high-severity conflicts are held for review
    instead of being silently carried forward.
-4. Open **Summary** and download the handoff file.
+4. Open **Summary** and download the handoff file or calendar-ready `.ics` file.
 5. Explain the evidence boundary: public records only, preserved raw captures,
    hashes, and no claim of CoreWeave affiliation or internal access.
 
@@ -32,7 +32,11 @@ the live sources still match the expected structure.”
   whether a finding changes the handoff.
 - A date-only extension remains date-only. The checker does not invent a time.
 - Refreshes are staged and validated before replacing the last verified raw
-  capture or generated output.
+  capture or generated output. Raw and generated files are promoted together,
+  and each successful source capture is archived.
+- The JSON, health, and `.ics` endpoints make the local handoff easy to connect
+  to another approved tool without pretending that an internal integration
+  already exists.
 
 ## Questions that require an explicit boundary
 
@@ -65,10 +69,12 @@ uncertainty without improving this bounded task.
 ### What failed, and what changed?
 
 The first version gave a date-only extension an invented 11:59:59 PM end time
-and allowed high-conflict records into the calendar. An adversarial review found
-both problems. The revised version preserves the date-only fact, quarantines
-high-severity records, validates live source structure and hashes, stages
-refreshes, and tests 409 and 502 failure responses.
+and allowed high-conflict records into the calendar. A second adversarial pass
+then found an overly broad location comparison, an impossible local/UTC time
+pair that was not being checked, and a refresh that promoted raw and generated
+files separately. The current version preserves date-only facts, quarantines
+blocking records, checks each source independently, promotes all outputs as one
+transaction, archives every successful capture, and tests failure responses.
 
 ### What would you do next?
 

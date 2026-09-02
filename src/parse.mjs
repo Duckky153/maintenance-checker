@@ -189,6 +189,7 @@ export function mergeEvents(pageEvents, rssEvents) {
       postedAt: rssEvent.postedAt,
       description: pageEvent.description || rssEvent.description,
       fieldLocation: pageEvent.fieldLocation || rssEvent.fieldLocation,
+      status: rssEvent.status && rssEvent.status !== "Unknown" ? rssEvent.status : pageEvent.status,
       updates,
       sourceKinds: ["status-page", "rss"],
     });

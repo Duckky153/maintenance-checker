@@ -31,7 +31,8 @@ The live CoreWeave status page and its public RSS feed.
 - normalized notice list;
 - field-level validation findings;
 - calendar grouped by day, with blocking records held for review;
-- downloadable maintenance summary with source links.
+- downloadable maintenance summary with source links;
+- calendar-ready `.ics` export and a read-only JSON endpoint.
 
 ## Acceptance criteria
 
@@ -47,6 +48,10 @@ The live CoreWeave status page and its public RSS feed.
    missing, the manifest does not match the captured bytes, or no recognizable
    records can be parsed.
 10. A failed refresh leaves the last verified product output available.
+11. A refresh promotes raw evidence and every generated output as one
+    transaction, then archives the validated capture.
+12. The local health, JSON report, and calendar export provide a documented
+    handoff boundary without claiming an internal integration.
 
 ## Out of scope
 

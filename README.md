@@ -13,10 +13,10 @@ procedures.
 ## Archived evidence
 
 The September 2, 2026 snapshot contains 15 distinct public notices: 12
-maintenance records and three incidents. It includes five upcoming maintenance
-windows and four focused review cases. The saved cases cover an extension beyond
-the structured end date, a title and location-field conflict, one same-site
-overlap, and an incident that returned from monitoring to investigating.
+maintenance records and three incidents. The saved cases cover an extension
+beyond the structured end date, an impossible local/UTC time pair, a title and
+location-field conflict, overlapping windows under one location code, and an
+incident that returned from monitoring to investigating.
 
 ## Run it
 
@@ -32,10 +32,17 @@ Open `http://127.0.0.1:4180`.
 ## What to demonstrate
 
 1. Open **Notices** to see the source records and update history.
-2. Open **Problems found** to compare conflicting source fields.
+2. Open **Needs review** to compare conflicting source fields.
 3. Open **Calendar** to see which records passed the readiness checks and which
    records were held for review.
-4. Open **Summary** to download the next-maintenance brief.
+4. Open **Summary** to download the maintenance brief or `.ics` calendar.
+
+## Local integration
+
+While the local server is running, `GET /api/report` returns the checked JSON,
+`GET /calendar.ics` returns only calendar-ready maintenance, `GET /health`
+reports the current schema and counts, and `POST /api/refresh` performs a
+validated source refresh. See [docs/INTEGRATION.md](docs/INTEGRATION.md).
 
 ## Evidence boundary
 

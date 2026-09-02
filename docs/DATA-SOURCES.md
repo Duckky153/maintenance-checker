@@ -16,5 +16,6 @@ Used for the ten most recent event records and their dated lifecycle updates.
 ## Capture controls
 
 The fetch step records the URL, HTTP status, retrieval timestamp, byte count, and
-SHA-256 hash for each source. Raw captures are immutable evidence for a verification
-run. The browser reads a generated minimized dataset, never the raw HTML.
+SHA-256 hash for each source. Every successful refresh archives its validated
+raw capture under `evidence/source-snapshots/` before the temporary staging
+area is removed. The browser reads generated JSON, never the raw HTML.

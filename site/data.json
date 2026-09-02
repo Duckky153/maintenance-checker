@@ -1,17 +1,17 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-02T19:14:09.886Z",
+  "generatedAt": "2026-09-02T19:38:46.659Z",
   "source": {
     "name": "CoreWeave public status page and RSS feed",
     "manifest": {
       "schemaVersion": 1,
-      "retrievedAt": "2026-09-02T19:14:09.722Z",
+      "retrievedAt": "2026-09-02T19:38:46.502Z",
       "sources": [
         {
           "key": "statusPage",
           "url": "https://status.coreweave.com/",
           "httpStatus": 200,
-          "retrievedAt": "2026-09-02T19:14:09.722Z",
+          "retrievedAt": "2026-09-02T19:38:46.502Z",
           "bytes": 170982,
           "sha256": "35d1afa05e2724e752a65b6f37813e93684890cec45021a61146739744905e33",
           "file": "data/raw/status-page.html"
@@ -20,9 +20,9 @@
           "key": "rss",
           "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
           "httpStatus": 200,
-          "retrievedAt": "2026-09-02T19:14:09.722Z",
+          "retrievedAt": "2026-09-02T19:38:46.502Z",
           "bytes": 17636,
-          "sha256": "a720dfb815bb5c39bef2bad66b6cd26c80bb37015cb199f317ddbe11fe30d593",
+          "sha256": "9fb3f622e996c412f495d33611a352e654f9e01c044af06f37c254151ef56c65",
           "file": "data/raw/status-feed.xml"
         }
       ]
@@ -34,10 +34,10 @@
     "incidents": 3,
     "active": 3,
     "upcoming": 5,
-    "findings": 4,
-    "highFindings": 2,
-    "calendarReady": 5,
-    "calendarHeld": 2
+    "findings": 5,
+    "highFindings": 3,
+    "calendarReady": 4,
+    "calendarHeld": 3
   },
   "events": [
     {
@@ -47,7 +47,7 @@
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a85c13dcfac4447738b2ede",
       "postedAt": "Thu, 27 Aug 2026 15:22:56 GMT",
       "description": "CoreWeave will perform scheduled maintenance to update CNI networking in CoreWeave-managed clusters in US-EAST-08A, beginning Monday, August 24, 2026, at 9:00 AM ET (1:00 PM UTC) and continuing through Friday, September 4th, 2026. at 5:00 PM ET (9:00 PM UTC). Location: US-EAST-08A We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( https://docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-      "status": "Planned Maintenance",
+      "status": "Active",
       "phase": "active",
       "component": "CoreWeave Services",
       "scheduleText": "August 24, 2026 1:00PM - August 28, 2026 9:00PM UTC",
@@ -88,7 +88,7 @@
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91d05296d41a47784d96e1",
       "postedAt": "Mon, 31 Aug 2026 12:00:02 GMT",
       "description": "Details: CoreWeave will be performing electrical maintenance from Monday, August 31 at 12:00 UTC through Friday, September 4 at 21:00 UTC that will affect the UPS systems supporting one data hall in our US-EAST-04A facility. Impact: No impact to compute, storage, or network availability is expected and no customer action is required. Critical load is maintained by generator power while UPSs are unavailable. While a lineup is on maintenance bypass, that lineup operates without UPS battery ride-through, which is a temporary reduction in power redundancy. Utility power remains available throughout. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( https://docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-      "status": "Planned Maintenance",
+      "status": "Active",
       "phase": "active",
       "component": "CoreWeave Infrastructure",
       "scheduleText": "August 31, 2026 12:00PM - September 4, 2026 9:00PM UTC",
@@ -123,7 +123,7 @@
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9626e8892d7304f2747918",
       "postedAt": "Wed, 02 Sep 2026 19:00:03 GMT",
       "description": "CoreWeave will be performing scheduled InfiniBand network maintenance on Wednesday, September 2, 2026, from 1:00 PM ET (5:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-02B Location: US-EAST-02B During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-      "status": "Planned Maintenance",
+      "status": "Completed",
       "phase": "history",
       "component": "Coreweave Network",
       "scheduleText": "September 2, 2026 5:00PM - September 2, 2026 7:00PM UTC",
@@ -533,7 +533,7 @@
       "sourceUrl": "https://status.coreweave.com/pages/incident/5e126e998f2f032e1f8f0f4b/6a97846ff6933c04d812dc34",
       "postedAt": "Wed, 02 Sep 2026 07:00:24 GMT",
       "description": "We're investigating degraded performance with metrics in US-EAST. Querying US-EAST metrics in Grafana may be slow or return intermittent errors. Metric ingestion is degraded, but no metric data is being lost, and customer workloads are not affected. We'll provide updates as we remediate.",
-      "status": "IDENTIFIED",
+      "status": "Identified",
       "phase": "active",
       "component": "CoreWeave Logging",
       "scheduleText": null,
@@ -578,6 +578,24 @@
       }
     },
     {
+      "id": "local-utc-time-conflict:6a91de56495e3647627df156",
+      "rule": "local-utc-time-conflict",
+      "severity": "high",
+      "title": "Local and UTC times conflict",
+      "eventIds": [
+        "6a91de56495e3647627df156"
+      ],
+      "detail": "11:00 PM ET cannot correspond to 3:00 PM UTC; Eastern Time is four or five hours behind UTC.",
+      "evidence": {
+        "localTime": "11:00 PM ET",
+        "utcTime": "3:00 PM UTC",
+        "validOffsetsHours": [
+          4,
+          5
+        ]
+      }
+    },
+    {
       "id": "location-conflict:6a973dcfdf35e104e60306a3",
       "rule": "location-conflict",
       "severity": "high",
@@ -615,14 +633,14 @@
       "id": "overlapping-windows:6a91d05296d41a47784d96e1:6a91de56495e3647627df156",
       "rule": "overlapping-windows",
       "severity": "medium",
-      "title": "Maintenance windows overlap at the same site",
+      "title": "Maintenance windows share a location and time",
       "eventIds": [
         "6a91d05296d41a47784d96e1",
         "6a91de56495e3647627df156"
       ],
       "detail": "Scheduled CoreWeave Electrical Maintenance - US-EAST-04A overlaps Scheduled CoreWeave Network Maintenance - US-EAST-04.",
       "evidence": {
-        "region": "US-EAST-04",
+        "locationCode": "US-EAST-04",
         "left": [
           "2026-08-31T12:00:00.000Z",
           "2026-09-04T21:00:00.000Z"
@@ -642,7 +660,8 @@
       "endAt": "2026-09-04T21:00:00.000Z",
       "location": "US-EAST-04",
       "component": "CoreWeave Infrastructure",
-      "status": "Planned Maintenance",
+      "status": "Active",
+      "phase": "active",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91d05296d41a47784d96e1"
     },
     {
@@ -653,17 +672,8 @@
       "location": "EU-NORTH-05",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
+      "phase": "upcoming",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a976c8c471513477fa495c5"
-    },
-    {
-      "id": "6a91de56495e3647627df156",
-      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-04",
-      "startAt": "2026-09-03T15:00:00.000Z",
-      "endAt": "2026-09-03T17:00:00.000Z",
-      "location": "US-EAST-04",
-      "component": "Coreweave Network",
-      "status": "Planned Maintenance",
-      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91de56495e3647627df156"
     },
     {
       "id": "6a973c4bcfac4447738b3666",
@@ -673,6 +683,7 @@
       "location": "EU-SOUTH-03",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
+      "phase": "upcoming",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973c4bcfac4447738b3666"
     },
     {
@@ -683,6 +694,7 @@
       "location": "US-CENTRAL-06",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
+      "phase": "upcoming",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9740a6892d7304f27479f1"
     }
   ],
@@ -694,6 +706,15 @@
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a85c13dcfac4447738b2ede",
       "reasons": [
         "Extension is not reflected in the schedule field"
+      ]
+    },
+    {
+      "id": "6a91de56495e3647627df156",
+      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-04",
+      "startAt": "2026-09-03T15:00:00.000Z",
+      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91de56495e3647627df156",
+      "reasons": [
+        "Local and UTC times conflict"
       ]
     },
     {

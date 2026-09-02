@@ -1,0 +1,58 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Maintenance Notice Checker//Public Status Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:CoreWeave public maintenance review
+BEGIN:VEVENT
+UID:6a91d05296d41a47784d96e1@maintenance-notice-checker.local
+DTSTAMP:20260902T193846Z
+DTSTART:20260831T120000Z
+DTEND:20260904T210000Z
+SUMMARY:Scheduled CoreWeave Electrical Maintenance - US-EAST-04A
+LOCATION:US-EAST-04
+DESCRIPTION:Active (active). Source: https://status.coreweave.com/pages/m
+ aintenance/5e126e998f2f032e1f8f0f4b/6a91d05296d41a47784d96e1
+URL:https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f
+ 4b/6a91d05296d41a47784d96e1
+END:VEVENT
+BEGIN:VEVENT
+UID:6a976c8c471513477fa495c5@maintenance-notice-checker.local
+DTSTAMP:20260902T193846Z
+DTSTART:20260903T110000Z
+DTEND:20260903T130000Z
+SUMMARY:Scheduled CoreWeave Network Maintenance - EU-NORTH-05A
+LOCATION:EU-NORTH-05
+DESCRIPTION:Planned Maintenance (upcoming). Source: https://status.corewe
+ ave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a976c8c471513477fa49
+ 5c5
+URL:https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f
+ 4b/6a976c8c471513477fa495c5
+END:VEVENT
+BEGIN:VEVENT
+UID:6a973c4bcfac4447738b3666@maintenance-notice-checker.local
+DTSTAMP:20260902T193846Z
+DTSTART:20260908T130000Z
+DTEND:20260908T150000Z
+SUMMARY:Scheduled CoreWeave Network Maintenance - EU-SOUTH-03B
+LOCATION:EU-SOUTH-03
+DESCRIPTION:Planned Maintenance (upcoming). Source: https://status.corewe
+ ave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973c4bcfac4447738b3
+ 666
+URL:https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f
+ 4b/6a973c4bcfac4447738b3666
+END:VEVENT
+BEGIN:VEVENT
+UID:6a9740a6892d7304f27479f1@maintenance-notice-checker.local
+DTSTAMP:20260902T193846Z
+DTSTART:20260909T150000Z
+DTEND:20260909T170000Z
+SUMMARY:Scheduled CoreWeave Network Maintenance - US-CENTRAL-06A
+LOCATION:US-CENTRAL-06
+DESCRIPTION:Planned Maintenance (upcoming). Source: https://status.corewe
+ ave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9740a6892d7304f2747
+ 9f1
+URL:https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f
+ 4b/6a9740a6892d7304f27479f1
+END:VEVENT
+END:VCALENDAR
