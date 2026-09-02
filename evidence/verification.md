@@ -1,20 +1,21 @@
 # Verification report
 
 - Result: PASS
-- Verified: 2026-09-02T18:36:22.098Z
+- Verified: 2026-09-02T19:14:09.907Z
 - Notices: 15
 - Review items: 4
-- Calendar entries: 8
-- Automated tests: 8 passed
+- Calendar entries: 5
+- Held from calendar: 2
+- Automated tests: 15 passed
 - Browser views: 4 passed
 - Mobile horizontal overflow: 0px
 - Browser console errors: 0
 - Synthetic product records: 0
-- Synthetic test records: 0
+- Invented operating records accepted by tests: 0
 
 ## Captured sources
 
-- https://status.coreweave.com/ — HTTP 200, SHA-256 13a928eed50ce9fb37cd71720e64ab5fa13b222cbc68605d1e695aa216d9a39e
-- https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss — HTTP 200, SHA-256 be59f53668b6c90dbb7c305cc31e28cf1307f72979168f657f4ba5c20f2b55f5
+- https://status.coreweave.com/ — HTTP 200, SHA-256 35d1afa05e2724e752a65b6f37813e93684890cec45021a61146739744905e33
+- https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss — HTTP 200, SHA-256 a720dfb815bb5c39bef2bad66b6cd26c80bb37015cb199f317ddbe11fe30d593
 
 Live availability is checked separately from deterministic assertions against the archived real-data snapshot.

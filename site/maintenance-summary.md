@@ -1,40 +1,24 @@
 # Maintenance summary
 
-Generated from CoreWeave's public status records at Sep 2, 2026, 6:36 PM UTC.
+Generated from CoreWeave's public status records at Sep 2, 2026, 7:14 PM UTC.
 
 Notices reviewed: 15
 Items requiring review: 4
 
 ## Active and upcoming maintenance
 
-### Scheduled CoreWeave Maintenance - US-EAST-08A
-
-- Window: Aug 24, 2026, 1:00 PM UTC to Sep 4, 2026, 11:59 PM UTC
-- Location: US-EAST-08A
-- Component: CoreWeave Services
-- Status: Planned Maintenance
-- Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a85c13dcfac4447738b2ede
-
 ### Scheduled CoreWeave Electrical Maintenance - US-EAST-04A
 
 - Window: Aug 31, 2026, 12:00 PM UTC to Sep 4, 2026, 9:00 PM UTC
-- Location: US-EAST-04A
+- Location: US-EAST-04
 - Component: CoreWeave Infrastructure
 - Status: Planned Maintenance
 - Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91d05296d41a47784d96e1
 
-### Scheduled CoreWeave Network Maintenance - US-EAST-02B
-
-- Window: Sep 2, 2026, 5:00 PM UTC to Sep 2, 2026, 7:00 PM UTC
-- Location: US-EAST-02B
-- Component: Coreweave Network
-- Status: Planned Maintenance
-- Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9626e8892d7304f2747918
-
 ### Scheduled CoreWeave Network Maintenance - EU-NORTH-05A
 
 - Window: Sep 3, 2026, 11:00 AM UTC to Sep 3, 2026, 1:00 PM UTC
-- Location: EU-NORTH-05A
+- Location: EU-NORTH-05
 - Component: Coreweave Network
 - Status: Planned Maintenance
 - Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a976c8c471513477fa495c5
@@ -50,26 +34,23 @@ Items requiring review: 4
 ### Scheduled CoreWeave Network Maintenance - EU-SOUTH-03B
 
 - Window: Sep 8, 2026, 1:00 PM UTC to Sep 8, 2026, 3:00 PM UTC
-- Location: EU-SOUTH-03B
+- Location: EU-SOUTH-03
 - Component: Coreweave Network
 - Status: Planned Maintenance
 - Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973c4bcfac4447738b3666
 
-### Scheduled CoreWeave Network Maintenance - US-WEST-04A
-
-- Window: Sep 8, 2026, 3:00 PM UTC to Sep 8, 2026, 5:00 PM UTC
-- Location: US-WEST-04A
-- Component: Coreweave Network
-- Status: Planned Maintenance
-- Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973dcfdf35e104e60306a3
-
 ### Scheduled CoreWeave Network Maintenance - US-CENTRAL-06A
 
 - Window: Sep 9, 2026, 3:00 PM UTC to Sep 9, 2026, 5:00 PM UTC
-- Location: US-CENTRAL-06A
+- Location: US-CENTRAL-06
 - Component: Coreweave Network
 - Status: Planned Maintenance
 - Source: https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9740a6892d7304f27479f1
+
+## Held from calendar
+
+- Scheduled CoreWeave Maintenance - US-EAST-08A: Extension is not reflected in the schedule field (https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a85c13dcfac4447738b2ede)
+- Scheduled CoreWeave Network Maintenance - US-WEST-04A: Location conflict (https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973dcfdf35e104e60306a3)
 
 ## Items requiring review
 

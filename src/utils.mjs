@@ -54,8 +54,8 @@ export function extractExtendedDate(value = "") {
     /extended\s+(?:till|until|through)\s+([A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?,\s+\d{4})/i,
   );
   if (!match) return null;
-  const date = new Date(`${stripOrdinal(match[1])} 23:59:59 UTC`);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  const date = new Date(`${stripOrdinal(match[1])} 00:00:00 UTC`);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
 }
 
 export function uniqueBy(values, keyFn) {

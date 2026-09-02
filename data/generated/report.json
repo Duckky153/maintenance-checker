@@ -1,28 +1,28 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-09-02T18:36:22.079Z",
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T19:14:09.886Z",
   "source": {
     "name": "CoreWeave public status page and RSS feed",
     "manifest": {
       "schemaVersion": 1,
-      "retrievedAt": "2026-09-02T18:36:21.915Z",
+      "retrievedAt": "2026-09-02T19:14:09.722Z",
       "sources": [
         {
           "key": "statusPage",
           "url": "https://status.coreweave.com/",
           "httpStatus": 200,
-          "retrievedAt": "2026-09-02T18:36:21.915Z",
-          "bytes": 178954,
-          "sha256": "13a928eed50ce9fb37cd71720e64ab5fa13b222cbc68605d1e695aa216d9a39e",
+          "retrievedAt": "2026-09-02T19:14:09.722Z",
+          "bytes": 170982,
+          "sha256": "35d1afa05e2724e752a65b6f37813e93684890cec45021a61146739744905e33",
           "file": "data/raw/status-page.html"
         },
         {
           "key": "rss",
           "url": "https://status.coreweave.com/pages/5e126e998f2f032e1f8f0f4b/rss",
           "httpStatus": 200,
-          "retrievedAt": "2026-09-02T18:36:21.915Z",
-          "bytes": 17526,
-          "sha256": "be59f53668b6c90dbb7c305cc31e28cf1307f72979168f657f4ba5c20f2b55f5",
+          "retrievedAt": "2026-09-02T19:14:09.722Z",
+          "bytes": 17636,
+          "sha256": "a720dfb815bb5c39bef2bad66b6cd26c80bb37015cb199f317ddbe11fe30d593",
           "file": "data/raw/status-feed.xml"
         }
       ]
@@ -32,10 +32,12 @@
     "notices": 15,
     "maintenance": 12,
     "incidents": 3,
-    "active": 4,
+    "active": 3,
     "upcoming": 5,
     "findings": 4,
-    "highFindings": 2
+    "highFindings": 2,
+    "calendarReady": 5,
+    "calendarHeld": 2
   },
   "events": [
     {
@@ -77,7 +79,7 @@
         "status-page",
         "rss"
       ],
-      "extendedTo": "2026-09-04T23:59:59.000Z"
+      "extendedThroughDate": "2026-09-04"
     },
     {
       "id": "6a91d05296d41a47784d96e1",
@@ -112,101 +114,19 @@
         "status-page",
         "rss"
       ],
-      "extendedTo": null
-    },
-    {
-      "id": "6a91bf18471513477fa49258",
-      "kind": "maintenance",
-      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-13A",
-      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91bf18471513477fa49258",
-      "postedAt": "Tue, 01 Sep 2026 19:00:04 GMT",
-      "description": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-13A Location: US-EAST-13A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( https://docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-      "status": "Planned Maintenance",
-      "phase": "history",
-      "component": "Coreweave Network",
-      "scheduleText": "September 1, 2026 3:00PM - September 1, 2026 7:00PM UTC",
-      "startAt": "2026-09-01T15:00:00.000Z",
-      "endAt": "2026-09-01T19:00:00.000Z",
-      "titleLocation": "US-EAST-13A",
-      "fieldLocation": "US-EAST-13",
-      "updates": [
-        {
-          "atText": "August 28, 2026 5:02PM UTC",
-          "status": "Scheduled",
-          "body": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-13A Location: US-EAST-13A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( https://docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-          "source": "rss"
-        },
-        {
-          "atText": "September 1, 2026 3:00PM UTC",
-          "status": "Active",
-          "body": "This maintenance has started.",
-          "source": "rss"
-        },
-        {
-          "atText": "September 1, 2026 7:00PM UTC",
-          "status": "Completed",
-          "body": "This maintenance is complete.",
-          "source": "rss"
-        }
-      ],
-      "sourceKinds": [
-        "status-page",
-        "rss"
-      ],
-      "extendedTo": null
-    },
-    {
-      "id": "6a91c1f80d937e47612f7387",
-      "kind": "maintenance",
-      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-02A",
-      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91c1f80d937e47612f7387",
-      "postedAt": "Tue, 01 Sep 2026 19:00:03 GMT",
-      "description": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-02A Location: US-EAST-02A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-      "status": "Planned Maintenance",
-      "phase": "history",
-      "component": "Coreweave Network",
-      "scheduleText": "September 1, 2026 3:00PM - September 1, 2026 7:00PM UTC",
-      "startAt": "2026-09-01T15:00:00.000Z",
-      "endAt": "2026-09-01T19:00:00.000Z",
-      "titleLocation": "US-EAST-02A",
-      "fieldLocation": "US-EAST-02",
-      "updates": [
-        {
-          "atText": "August 28, 2026 5:14PM UTC",
-          "status": "Scheduled",
-          "body": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-02A Location: US-EAST-02A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
-          "source": "rss"
-        },
-        {
-          "atText": "September 1, 2026 3:00PM UTC",
-          "status": "Active",
-          "body": "This maintenance has started.",
-          "source": "rss"
-        },
-        {
-          "atText": "September 1, 2026 7:00PM UTC",
-          "status": "Completed",
-          "body": "This maintenance is complete.",
-          "source": "rss"
-        }
-      ],
-      "sourceKinds": [
-        "status-page",
-        "rss"
-      ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a9626e8892d7304f2747918",
       "kind": "maintenance",
       "title": "Scheduled CoreWeave Network Maintenance - US-EAST-02B",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9626e8892d7304f2747918",
-      "postedAt": "Wed, 02 Sep 2026 17:00:02 GMT",
+      "postedAt": "Wed, 02 Sep 2026 19:00:03 GMT",
       "description": "CoreWeave will be performing scheduled InfiniBand network maintenance on Wednesday, September 2, 2026, from 1:00 PM ET (5:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-02B Location: US-EAST-02B During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
       "status": "Planned Maintenance",
-      "phase": "active",
+      "phase": "history",
       "component": "Coreweave Network",
-      "scheduleText": "September 2, 2026 5:00PM - 7:00PM UTC",
+      "scheduleText": "September 2, 2026 5:00PM - September 2, 2026 7:00PM UTC",
       "startAt": "2026-09-02T17:00:00.000Z",
       "endAt": "2026-09-02T19:00:00.000Z",
       "titleLocation": "US-EAST-02B",
@@ -223,13 +143,19 @@
           "status": "Active",
           "body": "This maintenance has started.",
           "source": "rss"
+        },
+        {
+          "atText": "September 2, 2026 7:00PM UTC",
+          "status": "Completed",
+          "body": "This maintenance is complete.",
+          "source": "rss"
         }
       ],
       "sourceKinds": [
         "status-page",
         "rss"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a976c8c471513477fa495c5",
@@ -250,7 +176,7 @@
       "sourceKinds": [
         "status-page"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a91de56495e3647627df156",
@@ -271,7 +197,7 @@
       "sourceKinds": [
         "status-page"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a973c4bcfac4447738b3666",
@@ -292,7 +218,7 @@
       "sourceKinds": [
         "status-page"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a973dcfdf35e104e60306a3",
@@ -313,7 +239,7 @@
       "sourceKinds": [
         "status-page"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a9740a6892d7304f27479f1",
@@ -334,7 +260,7 @@
       "sourceKinds": [
         "status-page"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a91d8ddf6933c04d812da67",
@@ -380,7 +306,7 @@
       "sourceKinds": [
         "rss"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a8ccfbf4d52214768b5638a",
@@ -420,7 +346,7 @@
       "sourceKinds": [
         "rss"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a8cd2ad495e3647627def0d",
@@ -460,7 +386,7 @@
       "sourceKinds": [
         "rss"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     },
     {
       "id": "6a8fb0f16f989604d7b0842f",
@@ -518,7 +444,87 @@
       "sourceKinds": [
         "rss"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
+    },
+    {
+      "id": "6a91c1f80d937e47612f7387",
+      "kind": "maintenance",
+      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-02A",
+      "sourceUrl": "https://status.io/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91c1f80d937e47612f7387",
+      "postedAt": "Tue, 01 Sep 2026 19:00:03 GMT",
+      "description": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-02A Location: US-EAST-02A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
+      "status": "Completed",
+      "phase": "history",
+      "component": null,
+      "scheduleText": null,
+      "startAt": null,
+      "endAt": null,
+      "titleLocation": "US-EAST-02A",
+      "fieldLocation": "US-EAST-02A",
+      "updates": [
+        {
+          "atText": "August 28, 2026 5:14PM UTC",
+          "status": "Scheduled",
+          "body": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-02A Location: US-EAST-02A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
+          "source": "rss"
+        },
+        {
+          "atText": "September 1, 2026 3:00PM UTC",
+          "status": "Active",
+          "body": "This maintenance has started.",
+          "source": "rss"
+        },
+        {
+          "atText": "September 1, 2026 7:00PM UTC",
+          "status": "Completed",
+          "body": "This maintenance is complete.",
+          "source": "rss"
+        }
+      ],
+      "sourceKinds": [
+        "rss"
+      ],
+      "extendedThroughDate": null
+    },
+    {
+      "id": "6a91bf18471513477fa49258",
+      "kind": "maintenance",
+      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-13A",
+      "sourceUrl": "https://status.io/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91bf18471513477fa49258",
+      "postedAt": "Tue, 01 Sep 2026 19:00:04 GMT",
+      "description": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-13A Location: US-EAST-13A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( https://docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
+      "status": "Completed",
+      "phase": "history",
+      "component": null,
+      "scheduleText": null,
+      "startAt": null,
+      "endAt": null,
+      "titleLocation": "US-EAST-13A",
+      "fieldLocation": "US-EAST-13A",
+      "updates": [
+        {
+          "atText": "August 28, 2026 5:02PM UTC",
+          "status": "Scheduled",
+          "body": "CoreWeave will be performing scheduled InfiniBand network maintenance on Tuesday, September 1st, 2026, from 11:00 AM ET (3:00 PM UTC) to 3:00 PM ET (7:00 PM UTC) in US-EAST-13A Location: US-EAST-13A During this window, our network engineering team will upgrade the InfiniBand fabric. The components are upgraded one at a time so that InfiniBand fabric management remains available throughout the maintenance. Impact: We anticipate minimal impact. InfiniBand connectivity within this site should remain available for the duration of the window; however, during the failover between redundant components there is a small chance of a brief interruption to workloads using the affected fabric. We will be actively monitoring the situation during this time. We appreciate your patience and understanding. If you have any further questions or require assistance, please don't hesitate to reach out to our support team at support@coreweave.com. This activity is deemed Planned Maintenance under the CoreWeave Terms of Service Maintenance Policy ( https://docs.coreweave.com/policies/terms-of-service/maintenance-policy )",
+          "source": "rss"
+        },
+        {
+          "atText": "September 1, 2026 3:00PM UTC",
+          "status": "Active",
+          "body": "This maintenance has started.",
+          "source": "rss"
+        },
+        {
+          "atText": "September 1, 2026 7:00PM UTC",
+          "status": "Completed",
+          "body": "This maintenance is complete.",
+          "source": "rss"
+        }
+      ],
+      "sourceKinds": [
+        "rss"
+      ],
+      "extendedThroughDate": null
     },
     {
       "id": "6a97846ff6933c04d812dc34",
@@ -553,7 +559,7 @@
         "status-page",
         "rss"
       ],
-      "extendedTo": null
+      "extendedThroughDate": null
     }
   ],
   "findings": [
@@ -567,7 +573,7 @@
       ],
       "detail": "An update extends the work through 2026-09-04, but the schedule field ends 2026-08-28.",
       "evidence": {
-        "extendedTo": "2026-09-04T23:59:59.000Z",
+        "extendedThroughDate": "2026-09-04",
         "scheduleEnd": "2026-08-28T21:00:00.000Z"
       }
     },
@@ -630,49 +636,21 @@
   ],
   "calendar": [
     {
-      "id": "6a85c13dcfac4447738b2ede",
-      "title": "Scheduled CoreWeave Maintenance - US-EAST-08A",
-      "startAt": "2026-08-24T13:00:00.000Z",
-      "endAt": "2026-09-04T23:59:59.000Z",
-      "scheduledEndAt": "2026-08-28T21:00:00.000Z",
-      "usesExtension": true,
-      "location": "US-EAST-08A",
-      "component": "CoreWeave Services",
-      "status": "Planned Maintenance",
-      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a85c13dcfac4447738b2ede"
-    },
-    {
       "id": "6a91d05296d41a47784d96e1",
       "title": "Scheduled CoreWeave Electrical Maintenance - US-EAST-04A",
       "startAt": "2026-08-31T12:00:00.000Z",
       "endAt": "2026-09-04T21:00:00.000Z",
-      "scheduledEndAt": "2026-09-04T21:00:00.000Z",
-      "usesExtension": false,
-      "location": "US-EAST-04A",
+      "location": "US-EAST-04",
       "component": "CoreWeave Infrastructure",
       "status": "Planned Maintenance",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a91d05296d41a47784d96e1"
-    },
-    {
-      "id": "6a9626e8892d7304f2747918",
-      "title": "Scheduled CoreWeave Network Maintenance - US-EAST-02B",
-      "startAt": "2026-09-02T17:00:00.000Z",
-      "endAt": "2026-09-02T19:00:00.000Z",
-      "scheduledEndAt": "2026-09-02T19:00:00.000Z",
-      "usesExtension": false,
-      "location": "US-EAST-02B",
-      "component": "Coreweave Network",
-      "status": "Planned Maintenance",
-      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9626e8892d7304f2747918"
     },
     {
       "id": "6a976c8c471513477fa495c5",
       "title": "Scheduled CoreWeave Network Maintenance - EU-NORTH-05A",
       "startAt": "2026-09-03T11:00:00.000Z",
       "endAt": "2026-09-03T13:00:00.000Z",
-      "scheduledEndAt": "2026-09-03T13:00:00.000Z",
-      "usesExtension": false,
-      "location": "EU-NORTH-05A",
+      "location": "EU-NORTH-05",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a976c8c471513477fa495c5"
@@ -682,8 +660,6 @@
       "title": "Scheduled CoreWeave Network Maintenance - US-EAST-04",
       "startAt": "2026-09-03T15:00:00.000Z",
       "endAt": "2026-09-03T17:00:00.000Z",
-      "scheduledEndAt": "2026-09-03T17:00:00.000Z",
-      "usesExtension": false,
       "location": "US-EAST-04",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
@@ -694,36 +670,40 @@
       "title": "Scheduled CoreWeave Network Maintenance - EU-SOUTH-03B",
       "startAt": "2026-09-08T13:00:00.000Z",
       "endAt": "2026-09-08T15:00:00.000Z",
-      "scheduledEndAt": "2026-09-08T15:00:00.000Z",
-      "usesExtension": false,
-      "location": "EU-SOUTH-03B",
+      "location": "EU-SOUTH-03",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973c4bcfac4447738b3666"
-    },
-    {
-      "id": "6a973dcfdf35e104e60306a3",
-      "title": "Scheduled CoreWeave Network Maintenance - US-WEST-04A",
-      "startAt": "2026-09-08T15:00:00.000Z",
-      "endAt": "2026-09-08T17:00:00.000Z",
-      "scheduledEndAt": "2026-09-08T17:00:00.000Z",
-      "usesExtension": false,
-      "location": "US-WEST-04A",
-      "component": "Coreweave Network",
-      "status": "Planned Maintenance",
-      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973dcfdf35e104e60306a3"
     },
     {
       "id": "6a9740a6892d7304f27479f1",
       "title": "Scheduled CoreWeave Network Maintenance - US-CENTRAL-06A",
       "startAt": "2026-09-09T15:00:00.000Z",
       "endAt": "2026-09-09T17:00:00.000Z",
-      "scheduledEndAt": "2026-09-09T17:00:00.000Z",
-      "usesExtension": false,
-      "location": "US-CENTRAL-06A",
+      "location": "US-CENTRAL-06",
       "component": "Coreweave Network",
       "status": "Planned Maintenance",
       "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a9740a6892d7304f27479f1"
+    }
+  ],
+  "heldFromCalendar": [
+    {
+      "id": "6a85c13dcfac4447738b2ede",
+      "title": "Scheduled CoreWeave Maintenance - US-EAST-08A",
+      "startAt": "2026-08-24T13:00:00.000Z",
+      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a85c13dcfac4447738b2ede",
+      "reasons": [
+        "Extension is not reflected in the schedule field"
+      ]
+    },
+    {
+      "id": "6a973dcfdf35e104e60306a3",
+      "title": "Scheduled CoreWeave Network Maintenance - US-WEST-04A",
+      "startAt": "2026-09-08T15:00:00.000Z",
+      "sourceUrl": "https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973dcfdf35e104e60306a3",
+      "reasons": [
+        "Location conflict"
+      ]
     }
   ]
 }

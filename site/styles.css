@@ -186,6 +186,12 @@ tbody tr:last-child td { border-bottom: 0; }
 .calendar-entry { padding: 18px 22px; border-bottom: 1px solid var(--line); }
 .calendar-entry:last-child { border-bottom: 0; }
 .calendar-entry p { margin: 6px 0 0; color: var(--muted); }
+.calendar-hold { margin-top: 36px; padding-top: 18px; border-top: 1px solid #111; }
+.calendar-hold > p { max-width: 720px; margin: 7px 0 18px; color: var(--muted); line-height: 1.5; }
+.held-list { border: 1px solid var(--line); background: var(--paper); }
+.held-entry { padding: 16px 18px; border-bottom: 1px solid var(--line); }
+.held-entry:last-child { border-bottom: 0; }
+.held-entry p { margin: 6px 0 0; color: #a21919; font-size: 13px; }
 
 .summary-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, .7fr); gap: 32px; }
 .summary-text { margin: 0; padding: 28px; overflow-x: auto; border: 1px solid var(--line); background: var(--paper); white-space: pre-wrap; font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; }

@@ -46,7 +46,7 @@ function noticesView() {
     el("thead", {}, el("tr", {}, ["Notice", "Window", "Location", "Component", "State", "Review"].map((name) => el("th", { text: name })))),
     el("tbody", {}, events.map((event) => el("tr", {}, [
       el("td", {}, [el("span", { className: "row-title", text: event.title }), el("span", { className: "row-meta", text: event.kind })]),
-      el("td", {}, [el("span", { text: event.scheduleText || "Not in current page view" }), event.extendedTo ? el("span", { className: "row-meta", text: `Update extends through ${formatDate(event.extendedTo, false)}` }) : null]),
+      el("td", {}, [el("span", { text: event.scheduleText || "Not in current page view" }), event.extendedThroughDate ? el("span", { className: "row-meta", text: `Update says extended through ${formatDate(event.extendedThroughDate, false)}; no end time inferred` }) : null]),
       el("td", { text: event.fieldLocation || event.titleLocation || "Not stated" }),
       el("td", { text: event.component || "Not stated" }),
       el("td", {}, [el("span", { className: "status", text: event.status }), el("span", { className: "row-meta", text: event.phase })]),
@@ -67,8 +67,8 @@ function evidenceValues(finding) {
   if (evidence.titleLocation || evidence.fieldLocation) {
     return [["Title", evidence.titleLocation], ["Location field", evidence.fieldLocation]];
   }
-  if (evidence.extendedTo || evidence.scheduleEnd) {
-    return [["Latest update", `Extended through ${formatDate(evidence.extendedTo, false)}`], ["Schedule field", `Ends ${formatDate(evidence.scheduleEnd, false)}`]];
+  if (evidence.extendedThroughDate || evidence.scheduleEnd) {
+    return [["Latest update", `Extended through ${formatDate(evidence.extendedThroughDate, false)}; time not stated`], ["Schedule field", `Ends ${formatDate(evidence.scheduleEnd, false)}`]];
   }
   if (evidence.left || evidence.right) {
     return [["First window", `${formatDate(evidence.left[0])} – ${formatDate(evidence.left[1])}`], ["Second window", `${formatDate(evidence.right[0])} – ${formatDate(evidence.right[1])}`]];
@@ -152,15 +152,24 @@ function calendarView() {
     el("h3", { text: day }),
     el("div", { className: "day-events" }, events.map((event) => el("article", { className: "calendar-entry" }, [
       sourceLink(event, event.title),
-      el("p", { text: event.usesExtension
-        ? `${formatDate(event.startAt)} – ${formatDate(event.endAt, false)} (extended in update)`
-        : `${formatDate(event.startAt)} – ${formatDate(event.endAt)}` }),
+      el("p", { text: `${formatDate(event.startAt)} – ${formatDate(event.endAt)}` }),
       el("p", { text: `${event.location || "Location not stated"} · ${event.component || "Component not stated"}` }),
     ]))),
   ]));
+  const held = report.heldFromCalendar.length
+    ? el("section", { className: "calendar-hold" }, [
+      el("h3", { text: `Held for review (${report.heldFromCalendar.length})` }),
+      el("p", { text: "These records are not carried into the calendar until a person resolves the blocking source issue." }),
+      el("div", { className: "held-list" }, report.heldFromCalendar.map((event) => el("article", { className: "held-entry" }, [
+        sourceLink(event, event.title),
+        el("p", { text: event.reasons.join(" · ") }),
+      ]))),
+    ])
+    : null;
   return [
-    heading("Calendar", "Active and upcoming maintenance with a parseable UTC schedule, ordered by start time.", report.calendar.length),
+    heading("Calendar", "Only active and upcoming maintenance that passes the calendar readiness checks is shown here.", report.calendar.length),
     days.length ? el("div", {}, days) : el("p", { className: "empty", text: "No active or upcoming maintenance with a parseable schedule is in this capture." }),
+    held,
   ];
 }
 
@@ -172,7 +181,7 @@ function summaryView() {
     text: "Download summary",
   });
   return [
-    heading("Summary", "A downloadable maintenance handoff generated from the reviewed records."),
+    heading("Summary", "A downloadable handoff that separates calendar-ready records from items still requiring review."),
     el("div", { className: "summary-layout" }, [
       el("pre", { className: "summary-text", text: summaryText }),
       el("aside", { className: "summary-actions" }, [
