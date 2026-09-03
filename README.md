@@ -38,11 +38,8 @@ The included Pages workflow refreshes the public CoreWeave sources, runs the ful
 verification suite, and publishes only after every check passes. If a scheduled
 refresh fails, GitHub Pages keeps the last successful release available.
 
-After a public `Duckky153/maintenance-checker` repository is created and
-GitHub Pages is set to **GitHub Actions**, the expected URL is:
+The verified public demo is available at
 `https://duckky153.github.io/maintenance-checker/`.
-
-No repository or public site has been created by this local project.
 
 ## What to demonstrate
 
