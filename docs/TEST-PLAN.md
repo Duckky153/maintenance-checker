@@ -31,6 +31,8 @@ hashes but does not expect the event count to remain fixed.
 - the refresh workflow completes;
 - desktop and mobile pages have no horizontal overflow;
 - all navigation and stacked notice cards remain visible on mobile;
+- the same build loads from a repository subpath with no API, hides the
+  unavailable refresh control, and keeps static assets and downloads relative;
 - no browser console error is recorded.
 
 The verification report calculates source-host, source-identity, and manifest

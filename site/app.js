@@ -3,6 +3,7 @@ const refreshButton = document.querySelector("#refresh-button");
 const noticeDialog = document.querySelector("#notice-dialog");
 const dialogContent = document.querySelector("#dialog-content");
 let report;
+let refreshAvailable = false;
 
 function el(tag, attributes = {}, children = []) {
   const node = document.createElement(tag);
@@ -44,6 +45,10 @@ function windowText(event) {
   return event.scheduleText || (event.kind === "maintenance" ? "No scheduled window" : "Not provided in RSS");
 }
 
+function displayKind(kind) {
+  return kind === "maintenance" ? "Maintenance" : "Incident";
+}
+
 function reviewState(event) {
   const findings = report.findings.filter((finding) => finding.eventIds.includes(event.id));
   if (findings.some((finding) => finding.severity === "high")) return { label: "Held", findings };
@@ -58,7 +63,7 @@ function eventDetails(event) {
     ["Window", windowText(event)],
     ["Location", event.fieldLocation || event.titleLocation || "Not stated"],
     ["Component", event.component || "Not stated"],
-    ["Source state", `${event.status} · ${event.phase}`],
+    ["Status", event.status],
     ["Review", state.label],
   ];
 }
@@ -70,17 +75,17 @@ function noticesView() {
   );
   const table = el("table", {}, [
     el("caption", { className: "visually-hidden", text: "Public maintenance and incident notices with review status" }),
-    el("thead", {}, el("tr", {}, ["Notice", "Window", "Location", "Component", "State", "Review"].map((name) =>
+    el("thead", {}, el("tr", {}, ["Notice", "Window", "Location", "Component", "Status", "Review"].map((name) =>
       el("th", { scope: "col", text: name }),
     ))),
     el("tbody", {}, events.map((event) => {
       const state = reviewState(event);
       return el("tr", {}, [
-        el("td", {}, [el("span", { className: "row-title", text: event.title }), el("span", { className: "row-meta", text: event.kind })]),
+        el("td", {}, [el("span", { className: "row-title", text: event.title }), el("span", { className: "row-meta", text: displayKind(event.kind) })]),
         el("td", {}, [el("span", { text: windowText(event) }), event.extendedThroughDate ? el("span", { className: "row-meta", text: `Extended through ${formatDate(event.extendedThroughDate, false)}; no end time stated` }) : null]),
         el("td", { text: event.fieldLocation || event.titleLocation || "Not stated" }),
         el("td", { text: event.component || "Not stated" }),
-        el("td", {}, [el("span", { className: "status", text: event.status }), el("span", { className: "row-meta", text: event.phase })]),
+        el("td", {}, el("span", { className: "status", text: event.status })),
         el("td", {}, [
           el("span", { className: `review-state ${state.label === "Held" ? "held" : ""}`, text: state.label }),
           el("div", { className: "row-actions" }, [
@@ -93,7 +98,7 @@ function noticesView() {
   ]);
   const cards = el("div", { className: "notice-cards" }, events.map((event) => el("article", { className: "notice-card" }, [
     el("div", { className: "notice-card-title" }, [
-      el("div", {}, [el("h3", { text: event.title }), el("p", { text: event.kind })]),
+      el("div", {}, [el("h3", { text: event.title }), el("p", { text: displayKind(event.kind) })]),
       el("span", { className: `review-state ${reviewState(event).label === "Held" ? "held" : ""}`, text: reviewState(event).label }),
     ]),
     el("dl", {}, eventDetails(event).slice(0, 4).map(([label, value]) => el("div", {}, [
@@ -105,7 +110,7 @@ function noticesView() {
     ]),
   ])));
   return [
-    heading("Notices", "Every field links back to the public notice."),
+    heading("Notices", "Each record links to the original public notice."),
     el("div", { className: "table-wrap", tabindex: "0", "aria-label": "Scrollable notice table" }, table),
     cards,
   ];
@@ -155,8 +160,8 @@ function openNoticeReview(event) {
   const state = reviewState(event);
   const reasons = state.findings.map((finding) => finding.title).join("; ");
   const metadata = [
-    ["Type", event.kind],
-    ["Source state", `${event.status} · ${event.phase}`],
+    ["Type", displayKind(event.kind)],
+    ["Status", event.status],
     ["Schedule", windowText(event)],
     ["Location", event.fieldLocation || event.titleLocation || "Not stated"],
     ["Component", event.component || "Not stated"],
@@ -209,7 +214,7 @@ function calendarView() {
   ]) : null;
   return [
     heading("Calendar", "Only active and upcoming maintenance that passes every blocking check appears here."),
-    el("div", { className: "calendar-actions" }, el("a", { className: "button-link", href: "/calendar.ics", download: "maintenance-calendar.ics", text: "Download calendar" })),
+    el("div", { className: "calendar-actions" }, el("a", { className: "button-link", href: "calendar.ics", download: "maintenance-calendar.ics", text: "Download calendar" })),
     days.length ? el("div", {}, days) : el("p", { className: "empty", text: "No maintenance record passed the calendar checks in this capture." }),
     held,
   ];
@@ -217,21 +222,18 @@ function calendarView() {
 
 function summaryView() {
   const calendarItems = report.calendar.length ? el("ul", {}, report.calendar.map((item) => el("li", {}, [
-    sourceLink(item, item.title), el("span", { text: ` — ${formatDate(item.startAt)} · ${item.location}` }),
+    sourceLink(item, item.title), el("span", { text: `: ${formatDate(item.startAt)} · ${item.location}` }),
   ]))) : el("p", { className: "muted", text: "No records are ready for the calendar." });
   const heldItems = report.heldFromCalendar.length ? el("ul", {}, report.heldFromCalendar.map((item) => el("li", {}, [
-    sourceLink(item, item.title), el("span", { text: ` — ${item.reasons.join("; ")}` }),
+    sourceLink(item, item.title), el("span", { text: `: ${item.reasons.join("; ")}` }),
   ]))) : el("p", { className: "muted", text: "No records are held." });
   return [
     heading("Summary", "Download the ready schedule and unresolved issues."),
     el("div", { className: "summary-actions top-actions" }, [
-      el("a", { className: "button-link", href: "/maintenance-summary.md", download: "maintenance-summary.md", text: "Download summary" }),
-      el("a", { className: "button-link secondary", href: "/calendar.ics", download: "maintenance-calendar.ics", text: "Download calendar" }),
+      el("a", { className: "button-link", href: "maintenance-summary.md", download: "maintenance-summary.md", text: "Download summary" }),
+      el("a", { className: "button-link secondary", href: "calendar.ics", download: "maintenance-calendar.ics", text: "Download calendar" }),
     ]),
     el("article", { className: "summary-preview" }, [
-      el("p", { className: "summary-generated", text: `Prepared ${formatDate(report.generatedAt)} from the public status page and RSS feed.` }),
-      el("h3", { text: "Checked" }),
-      el("p", { text: `${report.counts.notices} notices · ${report.counts.findings} review flags · ${report.counts.calendarReady} calendar-ready · ${report.counts.calendarHeld} held` }),
       el("h3", { text: "Calendar-ready maintenance" }),
       calendarItems,
       el("h3", { text: "Held from calendar" }),
@@ -254,14 +256,19 @@ function render() {
 
 async function load() {
   try {
-    const response = await fetch(`/api/report?cache=${Date.now()}`);
-    if (!response.ok) throw new Error("The checked report is unavailable. Run npm run fetch and npm run build.");
+    const staticDeployment = window.location.pathname !== "/";
+    const reportUrl = new URL(staticDeployment ? "data.json" : "api/report", document.baseURI);
+    reportUrl.searchParams.set("cache", Date.now());
+    const response = await fetch(reportUrl);
+    refreshAvailable = !staticDeployment && response.ok;
+    if (!response.ok) throw new Error("Maintenance data is unavailable.");
     report = await response.json();
-    document.querySelector("#capture-time").textContent = `Captured ${formatDate(report.source.manifest.retrievedAt)}`;
+    refreshButton.hidden = !refreshAvailable;
+    document.querySelector("#capture-time").textContent = `Source data ${formatDate(report.source.manifest.retrievedAt)}`;
     document.querySelector("#notice-count").textContent = report.counts.notices;
     document.querySelector("#finding-count").textContent = report.counts.findings;
     document.querySelector("#calendar-count").textContent = report.calendar.length;
-    document.querySelector("#status-overview").textContent = `${report.counts.notices} checked · ${report.counts.findings} flags · ${report.counts.calendarReady} calendar-ready · ${report.counts.calendarHeld} held`;
+    document.querySelector("#status-overview").textContent = `${report.counts.notices} notices · ${report.counts.findings} need review · ${report.counts.calendarReady} on calendar · ${report.counts.calendarHeld} held`;
     render();
   } catch (error) {
     app.replaceChildren(el("p", { className: "error", text: error.message }));
@@ -269,14 +276,15 @@ async function load() {
 }
 
 refreshButton.addEventListener("click", async () => {
+  if (!refreshAvailable) return;
   refreshButton.disabled = true;
   refreshButton.textContent = "Refreshing…";
   try {
-    const response = await fetch("/api/refresh", { method: "POST" });
+    const response = await fetch(new URL("api/refresh", document.baseURI), { method: "POST" });
     if (!response.ok) throw new Error("Refresh failed");
     await load();
   } catch {
-    document.querySelector("#capture-time").textContent = "Refresh failed; showing the previous capture.";
+    document.querySelector("#capture-time").textContent = "Refresh failed. Showing the previous source data.";
   } finally {
     refreshButton.disabled = false;
     refreshButton.textContent = "Refresh from source";

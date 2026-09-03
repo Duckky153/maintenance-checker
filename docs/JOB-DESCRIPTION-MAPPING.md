@@ -1,6 +1,7 @@
 # CoreWeave role mapping
 
-Role checked September 2, 2026: [Enablement Solutions Specialist](https://www.linkedin.com/jobs/view/4452532411/)
+Role checked September 3, 2026 against official requisition
+`4705375006`: [Enablement Solutions Specialist](https://coreweave.com/careers/job?4705375006&board=coreweave&gh_jid=4705375006)
 
 The posting asks for someone who can understand Data Center Operations
 workflows, translate pain points into requirements, build practical internal

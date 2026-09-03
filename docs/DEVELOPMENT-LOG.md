@@ -49,3 +49,19 @@ plain review labels, and a readable summary preview.
 The result is a local portfolio prototype with a documented handoff boundary.
 It is not described as a production CoreWeave deployment or an existing
 connection to internal systems.
+
+## September 3, 2026: public-demo readiness
+
+- added a static data fallback and repository-relative assets and downloads;
+- hid the local refresh control when the server API is unavailable;
+- added a GitHub Pages workflow that refreshes, verifies, and deploys on a
+  schedule while retaining the last successful release after a failed run;
+- added a browser check that runs the site under the intended repository path
+  with no API;
+- moved the live refresh before screenshots so displayed counts and verification
+  evidence come from the same source capture;
+- removed duplicated generated-at and lifecycle labels from the visible
+  dashboard while keeping source freshness and review state visible.
+
+These changes prepare a public release but do not create a repository or publish
+the site.
