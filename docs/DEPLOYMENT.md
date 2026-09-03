@@ -2,13 +2,13 @@
 
 ## Target
 
-- Repository: `Duckky153/maintenance-notice-checker`
-- Site: `https://duckky153.github.io/maintenance-notice-checker/`
+- Repository: `Duckky153/maintenance-checker`
+- Site: `https://duckky153.github.io/maintenance-checker/`
 - Hosting: GitHub Pages using GitHub Actions
 
 ## One-time owner-controlled setup
 
-1. Create the public GitHub repository named `maintenance-notice-checker`.
+1. Create the public GitHub repository named `maintenance-checker`.
 2. Add it as this repository's `origin` and push `main`.
 3. In **Settings → Pages**, select **GitHub Actions** as the source.
 4. Run **Deploy public demo** once from the Actions tab.

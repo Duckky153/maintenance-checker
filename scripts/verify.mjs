@@ -193,7 +193,7 @@ async function browserChecks() {
 
 async function staticPreviewChecks(report) {
   const staticPort = await openPort();
-  const prefix = "/maintenance-notice-checker/";
+  const prefix = "/maintenance-checker/";
   const siteDir = path.join(rootDir, "site");
   const contentTypes = {
     ".css": "text/css; charset=utf-8",
