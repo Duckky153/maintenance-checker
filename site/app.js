@@ -276,7 +276,7 @@ refreshButton.addEventListener("click", async () => {
     if (!response.ok) throw new Error("Refresh failed");
     await load();
   } catch {
-    document.querySelector("#capture-time").textContent = "Refresh failed; the last verified capture is still shown.";
+    document.querySelector("#capture-time").textContent = "Refresh failed; showing the previous capture.";
   } finally {
     refreshButton.disabled = false;
     refreshButton.textContent = "Refresh from source";
