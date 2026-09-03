@@ -27,6 +27,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run fetch
+      - run: npm run build
       - run: npm run verify
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
