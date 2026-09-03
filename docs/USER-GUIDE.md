@@ -17,3 +17,7 @@ captures into a temporary location and validates the source structure, hashes,
 and parsed records. A failed refresh does not replace the last verified product
 output. Every successful refresh keeps a dated copy of the validated raw source
 files.
+
+On the public static demo, the checked source data loads automatically and the
+refresh button is hidden. The scheduled deployment workflow owns public source
+refreshes so a visitor cannot start or interrupt the capture process.

@@ -29,6 +29,21 @@ npm run serve
 
 Open `http://127.0.0.1:4180`.
 
+## Public demo
+
+The `site/` folder also runs as a static GitHub Pages site. In that mode the
+dashboard reads the latest validated `data.json`, keeps every source and download
+link working under the repository path, and hides the server-only refresh button.
+The included Pages workflow refreshes the public CoreWeave sources, runs the full
+verification suite, and publishes only after every check passes. If a scheduled
+refresh fails, GitHub Pages keeps the last successful release available.
+
+After a public `Duckky153/maintenance-notice-checker` repository is created and
+GitHub Pages is set to **GitHub Actions**, the expected URL is:
+`https://duckky153.github.io/maintenance-notice-checker/`.
+
+No repository or public site has been created by this local project.
+
 ## What to demonstrate
 
 1. Open **Notices** to see the source records and update history.

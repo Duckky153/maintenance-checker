@@ -1,6 +1,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { createServer } from "node:net";
+import http from "node:http";
+import { createServer as createNetServer } from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -12,14 +13,18 @@ import { sha256 } from "../src/utils.mjs";
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const evidenceDir = path.join(rootDir, "evidence");
 const browserDir = path.join(evidenceDir, "browser");
-const port = await new Promise((resolve, reject) => {
-  const probe = createServer();
-  probe.once("error", reject);
-  probe.listen(0, "127.0.0.1", () => {
-    const address = probe.address();
-    probe.close(() => resolve(address.port));
+async function openPort() {
+  return new Promise((resolve, reject) => {
+    const probe = createNetServer();
+    probe.once("error", reject);
+    probe.listen(0, "127.0.0.1", () => {
+      const address = probe.address();
+      probe.close(() => resolve(address.port));
+    });
   });
-});
+}
+
+const port = await openPort();
 const baseUrl = `http://127.0.0.1:${port}`;
 
 function requireCondition(condition, message) {
@@ -62,7 +67,7 @@ async function waitForServer() {
   throw new Error("Local verification server did not become ready.");
 }
 
-async function browserChecks(report) {
+async function browserChecks() {
   const server = spawn(process.execPath, [path.join(rootDir, "scripts", "serve.mjs")], {
     cwd: rootDir,
     env: { ...process.env, PORT: String(port) },
@@ -80,7 +85,19 @@ async function browserChecks(report) {
 
       await page.goto(`${baseUrl}/#notices`, { waitUntil: "networkidle" });
       await page.getByRole("heading", { name: "Notices" }).waitFor();
-      requireCondition(await page.locator("tbody tr").count() === report.counts.notices, "Notice row count does not match report.");
+      const refreshResponsePromise = page.waitForResponse((response) =>
+        response.url().endsWith("/api/refresh") && response.request().method() === "POST",
+      );
+      await page.getByRole("button", { name: "Refresh from source" }).click();
+      const refreshResponse = await refreshResponsePromise;
+      requireCondition(refreshResponse.ok(), `Browser refresh returned ${refreshResponse.status()}.`);
+      await page.waitForFunction(() => {
+        const button = document.querySelector("#refresh-button");
+        return button && !button.disabled && button.textContent === "Refresh from source";
+      });
+      const activeReport = await fetch(`${baseUrl}/api/report`).then((response) => response.json());
+      await page.goto(`${baseUrl}/#notices`, { waitUntil: "networkidle" });
+      requireCondition(await page.locator("tbody tr").count() === activeReport.counts.notices, "Notice row count does not match refreshed report.");
       requireCondition((await page.getByText("CoreWeave status source").getAttribute("href")) === STATUS_PAGE_URL, "Status source link is wrong.");
       await page.getByRole("button", { name: "Review" }).first().click();
       await page.getByRole("dialog").waitFor();
@@ -90,17 +107,18 @@ async function browserChecks(report) {
       await page.getByRole("button", { name: "Close" }).click();
       await page.screenshot({ path: path.join(browserDir, "desktop-notices.png"), fullPage: true });
 
-      requireCondition((await page.locator("#status-overview").textContent()).includes("calendar-ready"), "Overview does not explain the workflow state.");
+      const overview = await page.locator("#status-overview").textContent();
+      requireCondition(overview.includes("need review") && overview.includes("on calendar"), "Overview does not explain the workflow state.");
       await page.getByRole("link", { name: /Needs review/ }).click();
       await page.getByRole("heading", { name: "Needs review" }).waitFor();
-      requireCondition(await page.locator("article.finding").count() === report.counts.findings, "Finding row count does not match report.");
-      requireCondition(await page.locator(".evidence-pair").count() === report.counts.findings, "A finding is missing side-by-side evidence.");
+      requireCondition(await page.locator("article.finding").count() === activeReport.counts.findings, "Finding row count does not match refreshed report.");
+      requireCondition(await page.locator(".evidence-pair").count() === activeReport.counts.findings, "A finding is missing side-by-side evidence.");
       await page.screenshot({ path: path.join(browserDir, "desktop-problems.png"), fullPage: true });
 
       await page.getByRole("link", { name: /Calendar/ }).click();
       await page.getByRole("heading", { name: "Calendar" }).waitFor();
-      requireCondition(await page.locator(".calendar-entry").count() === report.calendar.length, "Calendar count does not match report.");
-      requireCondition(await page.locator(".held-entry").count() === report.heldFromCalendar.length, "Held-for-review count does not match report.");
+      requireCondition(await page.locator(".calendar-entry").count() === activeReport.calendar.length, "Calendar count does not match refreshed report.");
+      requireCondition(await page.locator(".held-entry").count() === activeReport.heldFromCalendar.length, "Held-for-review count does not match refreshed report.");
       await page.screenshot({ path: path.join(browserDir, "desktop-calendar.png"), fullPage: true });
 
       await page.getByRole("link", { name: "Summary" }).click();
@@ -119,11 +137,11 @@ async function browserChecks(report) {
       requireCondition(calendarDownload.suggestedFilename() === "maintenance-calendar.ics", "Calendar download filename is wrong.");
       const downloadedCalendar = await readFile(await calendarDownload.path(), "utf8");
       requireCondition(downloadedCalendar === await readFile(path.join(rootDir, "site", "calendar.ics"), "utf8"), "Downloaded calendar does not match the generated calendar.");
-      requireCondition((downloadedCalendar.match(/BEGIN:VEVENT/g) || []).length === report.calendar.length, "Calendar export count does not match the report.");
+      requireCondition((downloadedCalendar.match(/BEGIN:VEVENT/g) || []).length === activeReport.calendar.length, "Calendar export count does not match the refreshed report.");
 
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(`${baseUrl}/#notices`, { waitUntil: "networkidle" });
-      requireCondition(await page.locator(".notice-card").count() === report.counts.notices, "Mobile notice cards do not match the report.");
+      requireCondition(await page.locator(".notice-card").count() === activeReport.counts.notices, "Mobile notice cards do not match the refreshed report.");
       requireCondition(await page.getByRole("link", { name: "Summary" }).isVisible(), "Summary navigation is hidden on mobile.");
       await page.screenshot({ path: path.join(browserDir, "mobile-notices.png"), fullPage: true });
       await page.goto(`${baseUrl}/#problems`, { waitUntil: "networkidle" });
@@ -135,33 +153,18 @@ async function browserChecks(report) {
       requireCondition(summaryOverflow <= 1, `Mobile summary overflows horizontally by ${summaryOverflow}px.`);
       await page.screenshot({ path: path.join(browserDir, "mobile-summary.png"), fullPage: true });
 
-      const refreshResponsePromise = page.waitForResponse((response) =>
-        response.url().endsWith("/api/refresh") && response.request().method() === "POST",
-      );
-      await page.getByRole("button", { name: "Refresh from source" }).click();
-      const refreshResponse = await refreshResponsePromise;
-      requireCondition(refreshResponse.ok(), `Browser refresh returned ${refreshResponse.status()}.`);
-      await page.waitForFunction(() => {
-        const button = document.querySelector("#refresh-button");
-        return button && !button.disabled && button.textContent === "Refresh from source";
-      });
-      const refreshedReport = await fetch(`${baseUrl}/api/report`).then((response) => response.json());
       requireCondition(
-        Number(await page.locator("#notice-count").textContent()) === refreshedReport.counts.notices,
-        "Displayed notice count does not match the refreshed report.",
-      );
-      requireCondition(
-        (await page.locator("#capture-time").textContent()).startsWith("Captured "),
+        (await page.locator("#capture-time").textContent()).startsWith("Source data "),
         "Refresh did not replace the capture timestamp.",
       );
       requireCondition(consoleErrors.length === 0, `Browser console errors: ${consoleErrors.join(" | ")}`);
 
       return {
         views: ["notices", "problems", "calendar", "summary"],
-        noticeRows: report.counts.notices,
-        findingRows: report.counts.findings,
-        calendarRows: report.calendar.length,
-        heldCalendarRows: report.heldFromCalendar.length,
+        noticeRows: activeReport.counts.notices,
+        findingRows: activeReport.counts.findings,
+        calendarRows: activeReport.calendar.length,
+        heldCalendarRows: activeReport.heldFromCalendar.length,
         noticeReview: "passed",
         summaryDownload: "passed",
         calendarDownload: "passed",
@@ -188,8 +191,94 @@ async function browserChecks(report) {
   }
 }
 
+async function staticPreviewChecks(report) {
+  const staticPort = await openPort();
+  const prefix = "/maintenance-notice-checker/";
+  const siteDir = path.join(rootDir, "site");
+  const contentTypes = {
+    ".css": "text/css; charset=utf-8",
+    ".html": "text/html; charset=utf-8",
+    ".ics": "text/calendar; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".md": "text/markdown; charset=utf-8",
+  };
+  const server = http.createServer(async (request, response) => {
+    const url = new URL(request.url || "/", `http://127.0.0.1:${staticPort}`);
+    if (request.method !== "GET" || !url.pathname.startsWith(prefix)) {
+      response.writeHead(404).end("Not found");
+      return;
+    }
+    let relativePath;
+    try {
+      relativePath = decodeURIComponent(url.pathname.slice(prefix.length)) || "index.html";
+    } catch {
+      response.writeHead(400).end("Malformed URL");
+      return;
+    }
+    const resolved = path.resolve(siteDir, relativePath);
+    if (resolved !== siteDir && !resolved.startsWith(`${siteDir}${path.sep}`)) {
+      response.writeHead(403).end("Forbidden");
+      return;
+    }
+    try {
+      const body = await readFile(resolved);
+      response.writeHead(200, {
+        "content-type": contentTypes[path.extname(resolved)] || "application/octet-stream",
+        "x-content-type-options": "nosniff",
+      });
+      response.end(body);
+    } catch {
+      response.writeHead(404).end("Not found");
+    }
+  });
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(staticPort, "127.0.0.1", resolve);
+  });
+
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const consoleErrors = [];
+    page.on("console", (message) => {
+      if (message.type() === "error") consoleErrors.push(message.text());
+    });
+    const previewUrl = `http://127.0.0.1:${staticPort}${prefix}`;
+    await page.goto(`${previewUrl}#notices`, { waitUntil: "networkidle" });
+    await page.getByRole("heading", { name: "Notices" }).waitFor();
+    requireCondition(await page.locator("tbody tr").count() === report.counts.notices, "Static preview notice count does not match report.");
+    requireCondition(await page.locator("#refresh-button").isHidden(), "Static preview exposes a refresh control that cannot work.");
+    requireCondition((await page.locator(".masthead").evaluate((node) => getComputedStyle(node).backgroundColor)) === "rgb(12, 12, 12)", "Static preview stylesheet did not load.");
+    await page.getByRole("link", { name: "Summary" }).click();
+    const summaryHref = await page.getByRole("link", { name: "Download summary" }).getAttribute("href");
+    const calendarHref = await page.getByRole("link", { name: "Download calendar" }).getAttribute("href");
+    requireCondition(summaryHref === "maintenance-summary.md", "Static summary link is not relative to the deployment path.");
+    requireCondition(calendarHref === "calendar.ics", "Static calendar link is not relative to the deployment path.");
+    const summaryDownloadPromise = page.waitForEvent("download");
+    await page.getByRole("link", { name: "Download summary" }).click();
+    const summaryDownload = await summaryDownloadPromise;
+    requireCondition(
+      await readFile(await summaryDownload.path(), "utf8") === await readFile(path.join(siteDir, "maintenance-summary.md"), "utf8"),
+      "Static summary download does not match the published file.",
+    );
+    const calendarDownloadPromise = page.waitForEvent("download");
+    await page.getByRole("link", { name: "Download calendar" }).click();
+    const calendarDownload = await calendarDownloadPromise;
+    requireCondition(
+      await readFile(await calendarDownload.path(), "utf8") === await readFile(path.join(siteDir, "calendar.ics"), "utf8"),
+      "Static calendar download does not match the published file.",
+    );
+    requireCondition(consoleErrors.length === 0, `Static preview console errors: ${consoleErrors.join(" | ")}`);
+    return { status: "passed", basePath: prefix, refreshControl: "hidden", downloads: "passed", consoleErrors };
+  } finally {
+    await browser.close();
+    await new Promise((resolve) => server.close(resolve));
+  }
+}
+
 await mkdir(browserDir, { recursive: true });
-const report = await buildReport({ rootDir });
+await buildReport({ rootDir });
 
 const testResult = spawnSync(process.execPath, ["--test", "--test-reporter=tap"], {
   cwd: rootDir,
@@ -203,10 +292,11 @@ requireCondition(automatedTests > 0, "Automated test count could not be verified
 
 const [liveSources, browserResult] = await Promise.all([
   liveSourceChecks(),
-  browserChecks(report),
+  browserChecks(),
 ]);
 
 const finalReport = await buildReport({ rootDir });
+const publicStaticPreview = await staticPreviewChecks(finalReport);
 
 const manifest = JSON.parse(await readFile(path.join(rootDir, "data", "raw", "source-manifest.json"), "utf8"));
 const approvedHosts = new Set(["status.coreweave.com", "status.io"]);
@@ -232,7 +322,7 @@ const verification = {
   sourceManifest: manifest,
   liveSources,
   automatedTests,
-  browser: browserResult,
+  browser: { ...browserResult, publicStaticPreview },
 };
 
 const markdown = [
@@ -246,6 +336,7 @@ const markdown = [
   `- Held from calendar: ${finalReport.heldFromCalendar.length}`,
   `- Automated tests: ${automatedTests} passed`,
   `- Browser views: 4 passed`,
+  `- Public static preview: ${publicStaticPreview.status}`,
   `- Mobile horizontal overflow: ${browserResult.mobileOverflowPixels}px`,
   `- Browser console errors: ${browserResult.consoleErrors.length}`,
   `- Records with unexpected source hosts: ${unexpectedSourceHosts}`,
@@ -265,4 +356,4 @@ await Promise.all([
   writeFile(path.join(evidenceDir, "verification.md"), markdown, "utf8"),
 ]);
 
-console.log(`PASS: ${automatedTests} tests, 4 browser views, ${finalReport.counts.notices} source-backed notices, ${manifestHashMismatches} hash mismatches.`);
+console.log(`PASS: ${automatedTests} tests, 4 browser views, public static preview, ${finalReport.counts.notices} source-backed notices, ${manifestHashMismatches} hash mismatches.`);
