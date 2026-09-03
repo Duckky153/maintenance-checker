@@ -6,17 +6,12 @@
 - Site: `https://duckky153.github.io/maintenance-checker/`
 - Hosting: GitHub Pages using GitHub Actions
 
-## One-time owner-controlled setup
+## Published state
 
-1. Create the public GitHub repository named `maintenance-checker`.
-2. Add it as this repository's `origin` and push `main`.
-3. In **Settings → Pages**, select **GitHub Actions** as the source.
-4. Run **Deploy public demo** once from the Actions tab.
-5. Open the published URL and check Notices, Needs review, Calendar, Summary,
-   both downloads, and at least one original-source link.
-
-Repository creation, pushing, and enabling Pages are external actions and require
-the owner's separate approval.
+The public repository and GitHub Pages site were enabled on September 3, 2026.
+Deployment run `33811511955` passed the full workflow. A Chrome review then
+confirmed Notices, Needs review, Calendar, Summary, original-source links, and
+both downloads on the public URL.
 
 ## Ongoing behavior
 
