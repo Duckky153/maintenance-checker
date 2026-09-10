@@ -1,6 +1,6 @@
 # Local integration contract
 
-Run `npm run serve`, then use these read-only local endpoints:
+Run `npm ci`, `npm run fetch`, `npm run build`, then `npm run serve`. Open `http://127.0.0.1:4180`. These local endpoints provide the report and refresh operation:
 
 | Endpoint | Purpose |
 |---|---|

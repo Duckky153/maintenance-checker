@@ -65,3 +65,9 @@ connection to internal systems.
 
 These changes prepare a public release but do not create a repository or publish
 the site.
+
+## September 10, 2026 — review instructions and calendar cleanup
+
+Added a browser-first guide linked from the footer, a real captured location-conflict example, calendar handoff and refresh recovery steps, and a manual-versus-tool workflow comparison. The guide states how corrected sources re-enter the calendar; there is no invented approval control. Updated the existing setup and explanation notes.
+
+Computer review found a literal null at the bottom of Calendar when no records were held. Rendering now skips absent optional sections, with a regression assertion in the existing browser check. The final verification passed 26 tests, four views, public static preview, downloads and refresh checks against 13 current public notices. Chrome interaction checks covered the guide, Needs review, Calendar and both downloads. No user study or measured time-saving claim was added.

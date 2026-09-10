@@ -250,7 +250,7 @@ function render() {
     else link.removeAttribute("aria-current");
   });
   const views = { notices: noticesView, problems: problemsView, calendar: calendarView, summary: summaryView };
-  app.replaceChildren(...views[validRoute]());
+  app.replaceChildren(...views[validRoute]().filter(Boolean));
   app.focus({ preventScroll: true });
 }
 

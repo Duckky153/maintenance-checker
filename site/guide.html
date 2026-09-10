@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Review guide | Maintenance Notice Checker</title><link rel="stylesheet" href="styles.css"></head>
+<body><header class="masthead"><div><h1>Review a maintenance notice</h1><p class="purpose">Check the source, separate unresolved details, then prepare the handoff.</p></div></header>
+<main class="guide"><p><a href="./#problems">Back to Needs review</a></p>
+<h2>Before you start</h2><p>Check the source date at the top of the checker. It shows a captured set of public notices, not a live operations feed. If you need the latest schedule, open the original notice before acting.</p>
+<h2>Four steps</h2><ol>
+<li><strong>Read Needs review.</strong> Compare the two fields shown under each finding. “Blocked from calendar” means the schedule cannot be used as written. “Review only” calls attention to something worth checking.</li>
+<li><strong>Open the original notice.</strong> Read its latest update, location and scheduled times. Do not pick a value just because it appears in the title. If the source still disagrees with itself, keep the record unresolved.</li>
+<li><strong>Check Calendar.</strong> Only active or upcoming maintenance that passes the blocking checks is included. Held records are listed separately. The checker has no manual approval button: a corrected source must pass a later refresh before the record can enter the export.</li>
+<li><strong>Prepare the handoff.</strong> Download the summary and calendar from Summary. The summary includes unresolved active or upcoming maintenance. Older findings remain in Needs review. The calendar contains only the entries that passed the checks. Send the files through your normal review process only after checking their contents.</li>
+</ol>
+<h2>A real conflict</h2><p>In the September 3 capture, one notice was titled <strong>US-WEST-04A</strong> while its location field said <strong>US-EAST-04</strong>. The checker held that record out of the calendar. It did not decide which location was correct.</p><p><a href="https://status.coreweave.com/pages/maintenance/5e126e998f2f032e1f8f0f4b/6a973dcfdf35e104e60306a3" target="_blank" rel="noreferrer">Open the original notice</a>. The source may have changed since the capture.</p>
+<h2>What to include in a handoff</h2><p>State when the source was captured, which locations and windows are ready, and which notices still need a decision. For each unresolved notice, include its source link, the conflicting values and the question that needs answering. The downloaded summary provides the starting point.</p>
+<h2>If something goes wrong</h2><ul>
+<li><strong>The data is old.</strong> Check the original status page. The public site refreshes on a schedule and retains the last successful release if a refresh fails. An old capture is not proof that nothing has changed.</li>
+<li><strong>A local refresh fails.</strong> The previous data remains visible. Check source availability before trying again. Do not describe the old export as current.</li>
+<li><strong>The calendar is empty.</strong> Read the held list and source date. There may be no qualifying upcoming windows, or notices may be blocked. Do not add a guessed time or location.</li>
+<li><strong>A date has no end time.</strong> Keep the missing time unresolved. A date-only extension does not justify inventing a time.</li>
+</ul><p>This is an independent project using public records. It does not approve maintenance or connect to CoreWeave's internal systems.</p>
+<p><a href="./#summary">Open Summary</a> · <a href="https://github.com/Duckky153/maintenance-checker/blob/main/docs/INTEGRATION.md">Setup and maintenance notes</a></p>
+</main></body></html>

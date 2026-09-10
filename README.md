@@ -66,3 +66,5 @@ validated source refresh. See [docs/INTEGRATION.md](docs/INTEGRATION.md).
 - Claims: parser, validation, calendar, summary, tests, and documentation
 - Not claimed: internal access, employee research, deployment, adoption, time
   saved, errors prevented, or operational impact
+
+The [review guide](https://duckky153.github.io/maintenance-checker/guide.html) explains source conflicts, calendar holds, handoff and failed refreshes. The [user guide](docs/USER-GUIDE.md) also compares the manual and checked workflows without claiming measured savings.
