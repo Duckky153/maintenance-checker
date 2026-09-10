@@ -3,13 +3,13 @@
 ## Thirty-second explanation
 
 “Maintenance information can appear in a title, structured fields, and later
-updates. I built a small checker against CoreWeave's public status records. It
+updates. I defined the review workflow and used AI coding tools to develop a checker against CoreWeave's public status records. It
 keeps the source text, compares the fields, flags differences for human review,
 holds ambiguous records out of the calendar, and exports a handoff summary. I
 used a dated real-data snapshot for repeatable tests and separately check that
 the live sources still match the expected structure.”
 
-## Two-minute demonstration
+## Short explanation with the browser open
 
 1. Open **Notices** and show the source link, structured window, location, and
    status on one row.
@@ -42,9 +42,7 @@ the live sources still match the expected structure.”
 
 ### How did you validate the user need?
 
-I did not interview CoreWeave employees. I treated an operations coordinator as
-a demonstration user and grounded the workflow in inconsistencies present in
-the public records. The project validates the workflow technically; it does not
+I did not interview CoreWeave employees. I grounded the workflow in inconsistencies present in the public records. There was no test participant. The project validates the workflow technically; it does not
 claim internal user validation.
 
 ### What impact did it have?
@@ -78,10 +76,7 @@ transaction, archives every successful capture, and tests failure responses.
 
 ### What would you do next?
 
-Interview real operations users, map the existing process and systems, identify
-the authoritative fields, design an approved DCIM or ITSM integration, test with
-representative users, and measure adoption, time to prepare a handoff, corrected
-errors, and solution health.
+For a real deployment, first confirm the actual review process, the authoritative source and who owns unresolved notices. Then agree on a destination for the calendar and a way to measure whether the tool is useful. That deployment work is separate from this completed public-records project.
 
 ## Interview safety rule
 

@@ -119,6 +119,7 @@ async function browserChecks() {
       await page.getByRole("heading", { name: "Calendar" }).waitFor();
       requireCondition(await page.locator(".calendar-entry").count() === activeReport.calendar.length, "Calendar count does not match refreshed report.");
       requireCondition(await page.locator(".held-entry").count() === activeReport.heldFromCalendar.length, "Held-for-review count does not match refreshed report.");
+      requireCondition(!await page.locator("#app").evaluate((node) => [...node.childNodes].some((child) => child.nodeType === 3 && child.textContent.trim() === "null")), "Empty calendar section rendered a null placeholder.");
       await page.screenshot({ path: path.join(browserDir, "desktop-calendar.png"), fullPage: true });
 
       await page.getByRole("link", { name: "Summary" }).click();
