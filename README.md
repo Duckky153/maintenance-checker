@@ -10,6 +10,12 @@ Each capture includes its source URL, retrieval time, and SHA-256 hash. The app
 does not claim access to CoreWeave systems, employees, telemetry, or internal
 procedures.
 
+**[Live demo](https://duckky153.github.io/maintenance-checker/)**
+·
+**[Review guide](https://duckky153.github.io/maintenance-checker/guide.html)**
+
+![The Needs review tab on the archived September 2, 2026 snapshot: five flagged notices, three of them blocked from the calendar](evidence/browser/desktop-problems.png)
+
 ## Archived evidence
 
 The September 2, 2026 snapshot contains 15 distinct public notices: 12
@@ -20,14 +26,23 @@ incident that returned from monitoring to investigating.
 
 ## Run it
 
+Needs Node.js 20 or newer. `npm run verify` drives a real browser, so install
+Playwright's Chromium once first.
+
 ```bash
 npm install
+npx playwright install chromium
 npm run fetch
 npm run verify
 npm run serve
 ```
 
 Open `http://127.0.0.1:4180`.
+
+`npm run fetch` pulls the current public pages and `npm run verify` regenerates
+the browser screenshots, so both overwrite files under `data/`, `site/` and
+`evidence/` with fresh output. The notice count then differs from the archived
+September 2 snapshot described above.
 
 ## Public demo
 
@@ -39,7 +54,7 @@ verification suite, and publishes only after every check passes. If a scheduled
 refresh fails, GitHub Pages keeps the last successful release available.
 
 The verified public demo is available at
-`https://duckky153.github.io/maintenance-checker/`.
+[duckky153.github.io/maintenance-checker](https://duckky153.github.io/maintenance-checker/).
 
 ## What to demonstrate
 
